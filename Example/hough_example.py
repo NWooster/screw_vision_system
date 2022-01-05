@@ -12,6 +12,9 @@ import numpy as np
 
 #loads image, pre-process it, apply hough circle detection
 def main(argv):
+
+    '''main function called to run the vision algorithm'''
+
     #labels where image is
     default_file = 'smarties.png'
     filename = argv[0] if len(argv) > 0 else default_file
