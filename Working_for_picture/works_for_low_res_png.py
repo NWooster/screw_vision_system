@@ -7,7 +7,6 @@ Nathan Wooster
 The main python script to run screw image detection system
 
 '''
-
 import sys
 import cv2 as cv
 import numpy as np
@@ -36,8 +35,8 @@ def main(argv):
     cv.imshow('Gray image', gray)
 
     # adds medium blur to image to reduce noise (avoids false circle detection)
-    ##gray = cv.medianBlur(gray, 5)
-    ##cv.imshow('Blur image', gray)
+    gray = cv.medianBlur(gray, 5)
+    cv.imshow('Blur image', gray)
 
     # numpy array .shape[0] outputs the number of elements in dimension 1 of the array (number of pixel rows)
     rows = gray.shape[0]
