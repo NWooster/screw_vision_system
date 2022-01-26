@@ -1,3 +1,14 @@
+#!/usr/bin/env python3
+
+"""
+resize.py
+Nathan Wooster
+Jan 2022
+This script contains the resize function to
+fit an image to the screen without altering
+the aspect ratio.
+"""
+
 import cv2 as cv
 
 
