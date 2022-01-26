@@ -11,6 +11,7 @@ import sys
 import cv2 as cv
 import numpy as np
 
+# custom import
 from resize import resize
 
 
@@ -19,7 +20,7 @@ def main(argv):
     '''main function called to run the vision algorithm'''
 
     # labels where image is
-    image_file = 'pics/pic2.jpg'
+    image_file = 'pics/pic8.jpg'  # default pic8
     filename = argv[0] if len(argv) > 0 else image_file
 
     # loads an image and calls it 'initial_image'
@@ -28,7 +29,6 @@ def main(argv):
     # check if image is loaded fine
     if initial_image is None:
         print('Error opening image!')
-        print('Usage: hough_circle.py [image_name -- default ' + image_file + '] \n')
         return -1
 
     # convert image to grayscale from BGR and new image called 'gray'
@@ -37,8 +37,8 @@ def main(argv):
 
     # adds medium blur to image to reduce noise (avoids false circle detection)
     blur_image = cv.medianBlur(gray, 5)
-    blur_resized = resize(blur_image, 600)
-    cv.imshow('Blur image', blur_resized)
+    # blur_resized = resize(blur_image, 600)
+    # cv.imshow('Blur image', blur_resized)
 
     # numpy array .shape[0] outputs the number of elements in dimension 1 of the array (number of pixel rows)
     rows = blur_image.shape[0]
@@ -48,19 +48,29 @@ def main(argv):
     '''
     Hough circle algorithm arguments:
 
-    gray: Input image (grayscale).
     circles: A vector that stores sets of 3 values: xc,yc,r for each detected circle.
-    HOUGH_GRADIENT: Define the detection method. Currently this is the only one available in OpenCV.
-    dp = 1: The inverse ratio of resolution.
-    min_dist = gray.rows/8: Minimum distance between detected centers.
-    param_1 = 100: Upper threshold for the internal Canny edge detector.
-    param_2 = 30*: Threshold for center detection.
-    min_radius = 1: Minimum radius to be detected. If unknown, put zero as default.
-    max_radius = 30: Maximum radius to be detected. If unknown, put zero as default.
+    image: Input image (grayscale and blurred).
+    HOUGH_GRADIENT: Define the detection method. One method available in OpenCV.
+    dp: The inverse ratio of resolution.
+    min_dist: Minimum distance between detected centers.
+    param_1: Upper threshold for the internal Canny edge detector.
+    param_2: Threshold for center detection.
+    min_radius: Minimum radius to be detected. If unknown, put zero as default.
+    max_radius: Maximum radius to be detected. If unknown, put zero as default.
     '''
-    circles = cv.HoughCircles(blur_image, cv.HOUGH_GRADIENT, 1, rows / 8,
-                              param1=100, param2=30,
-                              minRadius=5, maxRadius=60)
+
+    # parameters for Hough Circle algorithm
+    dp = 1  # high dp means low matrix resolution so takes circles that do not have clear boundary (default 1)
+    min_r = 30  # min pixel radius of screw
+    max_r = 60  # max pixel radius of screw
+    min_dist = int(min_r * 4)  # min distance between two screws
+    param1 = 95  # if low then more weak edges will be found so weak circles returned (default 100)
+    param2 = 30  # if low then more circles will be returned by HoughCircles (default 30)
+
+    # apply OpenCV HoughCircle algorithm
+    circles = cv.HoughCircles(blur_image, cv.HOUGH_GRADIENT, dp, min_dist,
+                              param1=param1, param2=param2,
+                              minRadius=min_r, maxRadius=max_r)
     # circles_og = circles
     # print('circles_og:', circles_og)
 
@@ -84,7 +94,7 @@ def main(argv):
     # call imported resize image function specify required width
     resized_image = resize(final_image, 600)
     # show resized image
-    cv.imshow("detected circles", resized_image)
+    cv.imshow("detected screws", resized_image)
     # wait for user to press exit
     cv.waitKey(0)
 
