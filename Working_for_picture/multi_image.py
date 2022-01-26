@@ -3,7 +3,7 @@
 '''
 
 Nathan Wooster
-23/12/21
+Jan 2022
 The main python script to run screw image detection system
 
 '''
