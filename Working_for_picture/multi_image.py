@@ -17,11 +17,11 @@ from resize import resize
 
 # loads image, pre-process it, apply hough circle detection
 def main(argv):
-    '''main function called to run the vision algorithm'''
+    """main function called to run the vision algorithm"""
 
     # labels where image is
     image_file = 'pics/pic8.jpg'  # default pic8
-    filename = argv[0] if len(argv) > 0 else image_file
+    filename = argv[0] if len(argv) > 0 else image_file  # allows user to input a file name
 
     # loads an image and calls it 'initial_image'
     initial_image = cv.imread(cv.samples.findFile(filename), cv.IMREAD_COLOR)
