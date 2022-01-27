@@ -13,8 +13,8 @@ import cv2 as cv
 
 
 def resize(image, req_width):
-    '''function to return resized
-    image with correct aspect ratio'''
+    """function to return resized
+    image with correct aspect ratio"""
 
     # find current pixel height and width
     height, width = image.shape[:2]
