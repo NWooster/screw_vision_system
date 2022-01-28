@@ -7,11 +7,7 @@ Jan 2022
 Script for edge detection
 
 '''
-from __future__ import print_function
-import sys
 import cv2 as cv
-import argparse
-import numpy as np
 
 # custom import
 from resize import resize
@@ -43,22 +39,31 @@ def edge_detection(image):
     # numpy array .shape[0] outputs the number of elements in dimension 1 of the array (number of pixel rows)
     # rows = blur_image.shape[0]
 
-    # initialise final image
-    final_image = initial_image
+    '''
+    Canny Edge Detection algorithm arguments:
+    
+    image: Input image (grayscale and blurred).
+    high_threshold: It is the High threshold value of intensity gradient.
+    low_threshold: It is the Low threshold value of intensity gradient.
+    aperture_size: Order of Kernel (matrix) for thr Sobel filter (smooth/sharpen image) Value should be odd between 3-7
+    (default 3x3).
+    l2_gradient: Sets equation for finding gradient mag (default FALSE).
+    '''
 
     # parameters for Canny Edge Detection algorithm
-    low_threshold = 0
-    ratio = 3
-    kernel_size = 3
+    low_threshold = 1
+    high_threshold = 100
+    aperture_size = 3
 
-    detected_edges = cv.Canny(blur_image, low_threshold, low_threshold * ratio, kernel_size)
-    mask = detected_edges != 0
-    final_image = final_image * (mask[:, :, None].astype(final_image.dtype))
+    # apply Canny Edge Detection algorithm
+    detected_edges = cv.Canny(blur_image, low_threshold, high_threshold, apertureSize=aperture_size,
+                              L2gradient=False)
 
     # call imported resize image function specify required width
-    resized_image = resize(final_image, 600)
+    resized_image = resize(detected_edges, 600)
     # show resized image
     cv.imshow("detected edges", resized_image)
+
     # wait for user to press exit
     cv.waitKey(0)
 
@@ -68,6 +73,5 @@ def edge_detection(image):
 # sys.argv[1:] is the user input (empty array -  good practise)
 
 if __name__ == "__main__":
-    #edge_detection('pics/pic8.jpg')
-    cv.createTrackbar('Min Threshold:', "detected edges", 0, 100, edge_detection('pics/pic8.jpg'))
-    # main(sys.argv[1:])
+    edge_detection('pics/pic8.jpg')
+# main(sys.argv[1:])
