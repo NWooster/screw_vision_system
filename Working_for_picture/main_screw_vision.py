@@ -18,7 +18,8 @@ def main(argv):
     '''main function called to run the vision algorithm'''
 
     # labels where image is
-    default_file = 'iphone2.PNG'
+    # default_file = 'iphone2.PNG'
+    default_file = 'pics/c1.png'
     filename = argv[0] if len(argv) > 0 else default_file
 
     # Loads an image and calls it 'src'
@@ -41,8 +42,10 @@ def main(argv):
 
     # numpy array .shape[0] outputs the number of elements in dimension 1 of the array (number of pixel rows)
     rows = gray.shape[0]
-    ##print(rows)
-    ##print(gray)
+    cols = gray.shape[1]
+    print(rows)
+    print(cols)
+    # print(gray)
 
     '''
     Hough circle algorithm arguments:
