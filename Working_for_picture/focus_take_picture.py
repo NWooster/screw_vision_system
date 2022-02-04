@@ -56,7 +56,7 @@ def take_picture(camera):
         print('no. of pixels:', no_of_pixels, 'MP')
 
         # save image as filename.jpeg
-        cv.imwrite('latest_image_from_camera' + '.jpg', frame)
+        cv.imwrite('auto_save_images/1latest_image_from_camera' + '.jpg', frame)
 
     # release the cap object and close any opened windows
     cap.release()
