@@ -20,7 +20,7 @@ def main(argv):
     """main function called to run the vision algorithm"""
 
     # labels where image is
-    image_file = 'pics/photo_above_eff_255mm.jpg'  # default pic8
+    image_file = 'auto_save_images/1latest_image_from_camera.jpg'  # default pic8
     filename = argv[0] if len(argv) > 0 else image_file  # allows user to input a file name
 
     # loads an image and calls it 'initial_image'
@@ -62,9 +62,9 @@ def main(argv):
     # parameters for Hough Circle algorithm
     dp = 1  # high dp means low matrix resolution so takes circles that do not have clear boundary (default 1)
     min_r = 5  # min pixel radius of screw
-    max_r = 20  # max pixel radius of screw
+    max_r = 30  # max pixel radius of screw
     min_dist = int(min_r * 4)  # min distance between two screws
-    param1 = 95  # if low then more weak edges will be found so weak circles returned (default 100)
+    param1 = 90  # if low then more weak edges will be found so weak circles returned (default 100)
     param2 = 30  # if low then more circles will be returned by HoughCircles (default 30)
 
     # apply OpenCV HoughCircle algorithm
@@ -91,13 +91,13 @@ def main(argv):
             # draws circles (r,b,g) colour
             cv.circle(final_image, center, radius, (255, 0, 255), 3)
 
-    # call imported resize image function specify required width
-    resized_image = resize(final_image, 600)
+    # call imported resize image function specify required width (default 600)
+    ##resized_image = resize(final_image, 600)
     # show resized image
-    cv.imshow("detected screws", resized_image)
+    ##cv.imshow("detected screws", resized_image)
 
     # save image as filename.jpeg
-    cv.imwrite('camera_screws_detected' + '.jpg', final_image)
+    cv.imwrite('auto_save_images/2camera_screws_detected' + '.jpg', final_image)
 
     # wait for user to press exit
     cv.waitKey(0)
