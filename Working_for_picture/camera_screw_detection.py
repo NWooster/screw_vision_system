@@ -61,7 +61,7 @@ def main(argv):
 
     # parameters for Hough Circle algorithm
     dp = 1  # high dp means low matrix resolution so takes circles that do not have clear boundary (default 1)
-    min_r = 5  # min pixel radius of screw
+    min_r = 12  # min pixel radius of screw
     max_r = 30  # max pixel radius of screw
     min_dist = int(min_r * 4)  # min distance between two screws
     param1 = 90  # if low then more weak edges will be found so weak circles returned (default 100)
