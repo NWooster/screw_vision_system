@@ -21,7 +21,7 @@ def main(argv):
 
     # labels where image is
     #image_file = 'auto_save_images/1latest_image_from_camera.jpg'  # default pic8
-    image_file = 'pictures_from_rig/without_square.jpg'
+    image_file = 'pictures_from_rig/with_25_square.jpg'
     filename = argv[0] if len(argv) > 0 else image_file  # allows user to input a file name
 
     # loads an image and calls it 'initial_image'
