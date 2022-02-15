@@ -5,8 +5,8 @@ import time
 cap = cv.VideoCapture(1)  # video capture source camera (Here external webcam)
 pixel_w = 1944  # default 1944
 pixel_h = pixel_w / 0.75  # default 2592 (ratio 0.75)
-cap.set(cv.CAP_PROP_FRAME_WIDTH, pixel_w)  # set desired pixel width (default 1944)
-cap.set(cv.CAP_PROP_FRAME_HEIGHT, pixel_h)  # set desired pixel height (default 2592)
+#cap.set(cv.CAP_PROP_FRAME_WIDTH, pixel_w)  # set desired pixel width (default 1944)
+#cap.set(cv.CAP_PROP_FRAME_HEIGHT, pixel_h)  # set desired pixel height (default 2592)
 print('camera connected')
 
 # Check if the webcam is opened correctly
