@@ -20,7 +20,8 @@ def main(argv):
     """main function called to run the vision algorithm"""
 
     # labels where image is
-    image_file = 'auto_save_images/1latest_image_from_camera.jpg'  # default pic8
+    #image_file = 'auto_save_images/1latest_image_from_camera.jpg'  # default pic8
+    image_file = 'pictures_from_rig/without_square.jpg'
     filename = argv[0] if len(argv) > 0 else image_file  # allows user to input a file name
 
     # loads an image and calls it 'initial_image'
@@ -97,7 +98,8 @@ def main(argv):
     ##cv.imshow("detected screws", resized_image)
 
     # save image as filename.jpeg
-    cv.imwrite('auto_save_images/2camera_screws_detected' + '.jpg', final_image)
+    #cv.imwrite('auto_save_images/2camera_screws_detected' + '.jpg', final_image)
+    cv.imwrite('pictures_from_rig/post_process/1screw_output' + '.jpg', final_image)
 
     # wait for user to press exit
     cv.waitKey(0)
