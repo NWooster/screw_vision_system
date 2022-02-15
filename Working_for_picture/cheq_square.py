@@ -22,20 +22,20 @@ objp[:, :2] = np.mgrid[0:7, 0:6].T.reshape(-1, 2)
 objpoints = []  # 3d point in real world space
 imgpoints = []  # 2d points in image plane.
 
-fname = 'auto_save_images/board.PNG'
-#fname = 'pictures_from_rig/149_square.jpg'
+#fname = 'auto_save_images/board.PNG'
+fname = 'pictures_from_rig/149_square.jpg'
 
 img = cv.imread(cv.samples.findFile(fname), cv.IMREAD_COLOR)
 gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
 
 # Find the chess board corners
-ret, corners = cv.findChessboardCorners(gray, (7, 6), None)
+ret, corners = cv.findChessboardCorners(gray, (7, 7), None)
 print(ret)
 
 # If found, add object points, image points (after refining them)
 if ret == 1:
     objpoints.append(objp)
-    corners2 = cv.cornerSubPix(gray, corners, (11, 11), (-1, -1), criteria)
+    corners2 = cv.cornerSubPix(gray, corners, 911, 11), (-1, -1), criteria)
     imgpoints.append(corners)
 
     # Draw and display the corners
