@@ -33,7 +33,7 @@ def take_picture(camera):
         raise IOError("Check if webcam connected properly")  # print an error message
     else:
         start_time = time.time()  # used for waiting for autofocus
-        autofocus_duration = 4  # seconds
+        autofocus_duration = 6  # seconds (default 4)
         print('wait ' + str(autofocus_duration) + ' secs for autofocus...')  # user message
 
         # begin loop whilst autofocussing, only exits after autofocus time complete
