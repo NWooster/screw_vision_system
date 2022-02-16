@@ -19,7 +19,7 @@ def calibrate_camera(columns, rows):
         """
 
     # load image
-    filename = 'pictures_from_rig/149_square.jpg'
+    filename = 'pictures_from_rig/with_25_square.jpg'  # default 149_square.jpg
     img = cv.imread(cv.samples.findFile(filename), cv.IMREAD_COLOR)
 
     # grayscale
@@ -36,19 +36,17 @@ def calibrate_camera(columns, rows):
     else:
         print('corners found')
 
+        # sub pixel adjustment algorithm
         criteria = (cv.TERM_CRITERIA_EPS + cv.TERM_CRITERIA_MAX_ITER, 30, 0.001)
-
         corners_sub_pix = cv.cornerSubPix(gray, found_corners, (5, 5), (-1, -1), criteria)
 
         # draw corners onto image
         cv.drawChessboardCorners(img, (columns, rows), corners_sub_pix, ret)
-        resized_image2 = resize(img, 800)  # resize image to fit screen
+        resized_image = resize(img, 800)  # resize image to fit screen
 
         # show image until user presses 'q'
         while True:
-            cv.imshow('found corners', resized_image2)
-            #cv.imshow('found corners2', resized_image2)
-
+            cv.imshow('found corners', resized_image)
             # press 'q' button to exit image
             if cv.waitKey(1) & 0xFF == ord('q'):
                 break
