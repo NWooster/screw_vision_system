@@ -18,11 +18,14 @@ def calibrate_camera(columns, rows):
         chessboard's columns and rows.
         """
 
+    # load image
     filename = 'pictures_from_rig/149_square.jpg'
-
     img = cv.imread(cv.samples.findFile(filename), cv.IMREAD_COLOR)
 
-    ret, found_corners = cv.findChessboardCorners(img, (columns, rows),
+    # grayscale
+    gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
+
+    ret, found_corners = cv.findChessboardCorners(gray, (columns, rows),
                                                   flags=cv.CALIB_CB_FAST_CHECK)
 
     # corners not found
@@ -35,18 +38,15 @@ def calibrate_camera(columns, rows):
 
         criteria = (cv.TERM_CRITERIA_EPS + cv.TERM_CRITERIA_MAX_ITER, 30, 0.001)
 
-        #found_corners2 = cv.cornerSubPix(img, found_corners, (5, 5), (-1, -1), criteria)
-
-        #cv.drawChessboardCorners(img, (columns, rows), found_corners2, ret)
-        #resized_image2 = resize(img, 800)  # resize image to fit screen
+        corners_sub_pix = cv.cornerSubPix(gray, found_corners, (5, 5), (-1, -1), criteria)
 
         # draw corners onto image
-        cv.drawChessboardCorners(img, (columns, rows), found_corners, ret)
-        resized_image = resize(img, 800)  # resize image to fit screen
+        cv.drawChessboardCorners(img, (columns, rows), corners_sub_pix, ret)
+        resized_image2 = resize(img, 800)  # resize image to fit screen
 
         # show image until user presses 'q'
         while True:
-            cv.imshow('found corners', resized_image)
+            cv.imshow('found corners', resized_image2)
             #cv.imshow('found corners2', resized_image2)
 
             # press 'q' button to exit image
