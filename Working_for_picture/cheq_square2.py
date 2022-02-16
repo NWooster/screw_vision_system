@@ -14,7 +14,7 @@ from resize import resize
 
 def calibrate_camera(columns, rows):
     """
-        ``columns`` and ``rows`` should be the number of inside corners in the
+        `columns` and `rows` should be the number of inside corners in the
         chessboard's columns and rows.
         """
 
@@ -37,12 +37,29 @@ def calibrate_camera(columns, rows):
         print('corners found')
 
         # sub pixel adjustment algorithm
-        criteria = (cv.TERM_CRITERIA_EPS + cv.TERM_CRITERIA_MAX_ITER, 30, 0.001)
+        """""
+        cornersSubPix(image, corners, winSize, zeroZone, criteria)
+        image: start image
+        corners: old corner location before refining
+        winSize: half size of search window
+        zeroZone: (-1,-1) says no zero zone (no possible singularities)
+        criteria: when the algorithm will exit
+        - EPS: corner moves by this epsilon over 2 iterations the required accuracy is reached (default 0.001)
+        - ITER: algorithm iterates this max amount (default 30)
+        """
+        criteria = (cv.TERM_CRITERIA_EPS + cv.TERM_CRITERIA_MAX_ITER, 50, 0.0001)
         corners_sub_pix = cv.cornerSubPix(gray, found_corners, (5, 5), (-1, -1), criteria)
+
+        corner_location = corners_sub_pix
+        print(corner_location)
+        print(found_corners - corner_location)
 
         # draw corners onto image
         cv.drawChessboardCorners(img, (columns, rows), corners_sub_pix, ret)
         resized_image = resize(img, 800)  # resize image to fit screen
+
+        # save non-resized image
+        cv.imwrite('pictures_from_rig/post_process/1chequered_cal' + '.jpg', img)
 
         # show image until user presses 'q'
         while True:
