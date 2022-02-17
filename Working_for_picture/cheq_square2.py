@@ -28,17 +28,17 @@ def calibrate_camera(columns, rows, width, height):
 
     # grayscale
     gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
-
+    # find corners
     ret, found_corners = cv.findChessboardCorners(gray, (columns, rows),
                                                   flags=cv.CALIB_CB_FAST_CHECK)
 
     # corners not found
     if ret != 1:
         print('chess board corners not found!')
+        return 0
 
     # corners found
     else:
-        print('corners found')
 
         # sub pixel adjustment algorithm
         """""
@@ -102,9 +102,10 @@ def calibrate_camera(columns, rows, width, height):
         ratio1 = mm_width/pix_all_width  # 1 pixel is this many mm
         ratio2 = mm_height/pix_all_height  # 1 pixel is this many mm
         ratio_error = abs(ratio1 - ratio2)
-        ave_ratio = (ratio1 + ratio2) / 2  # 1 pixel is this many mm
-        print('1 pixel is ', ave_ratio, 'mm and 1mm is ', 1/ave_ratio, ' many pixels')
-        # print('ratio of mm per pixel error:', ratio_error)
+        pix_mm_ratio = (ratio1 + ratio2) / 2  # 1 pixel is this many mm
+        print('1 pixel is ' + str(pix_mm_ratio) + 'mm and 1mm is ' + str(1/pix_mm_ratio) + ' many pixels')
+        print('possible error in mm per pixel is ' + str(ratio_error) + ' so max cumulative error is ' +
+              str(max(pixel_size[:])*ratio_error) + 'mm')
 
         # draw corners onto image
         cv.drawChessboardCorners(img, (columns, rows), corners_sub_pix, ret)
@@ -118,7 +119,7 @@ def calibrate_camera(columns, rows, width, height):
             if cv.waitKey(1) & 0xFF == ord('q'):
                 break
 
-    return found_corners
+    return pix_mm_ratio, ratio_error
 
 
 # function to return distance between 2 points
