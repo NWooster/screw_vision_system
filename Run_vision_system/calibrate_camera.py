@@ -58,8 +58,7 @@ def calibrate_camera(image_location='images_taken/1latest_image_from_camera', co
         corner_location = np.array(corners_sub_pix)  # goes up from bottom of column1, then next column starts bottom
         corner_location = np.squeeze(corner_location, axis=1)  # remove redundant array dimension
         pixel_size = img.shape[:2]
-        print('image size x:', pixel_size[1], 'y:', pixel_size[0])  # longer x creates rectangle
-        # cv.circle(img, (407, 1702), 50, (0, 0, 255))  # draw a circle somewhere
+        # print('image size x:', pixel_size[1], 'y:', pixel_size[0])  # longer x creates rectangle
 
         # select 4 corners
         bl_corner = corner_location[0, :]  # extract bottom left corner
@@ -103,9 +102,9 @@ def calibrate_camera(image_location='images_taken/1latest_image_from_camera', co
         ratio2 = mm_height / pix_all_height  # 1 pixel is this many mm
         ratio_error = abs(ratio1 - ratio2)
         pix_mm_ratio = (ratio1 + ratio2) / 2  # 1 pixel is this many mm
-        print('1 pixel is ' + str(pix_mm_ratio) + 'mm and 1mm is ' + str(1 / pix_mm_ratio) + ' many pixels')
-        print('possible error in mm per pixel is ' + str(ratio_error) + ' so max cumulative error is ' +
-              str(max(pixel_size[:]) * ratio_error) + 'mm')
+        # print('1 pixel is ' + str(pix_mm_ratio) + 'mm and 1mm is ' + str(1 / pix_mm_ratio) + ' many pixels')
+        # print('possible error in mm per pixel is ' + str(ratio_error) + ' so max cumulative error is ' +
+        #       str(max(pixel_size[:]) * ratio_error) + 'mm')
 
         # draw corners onto image
         cv.drawChessboardCorners(img, (columns, rows), corners_sub_pix, ret)
@@ -113,14 +112,14 @@ def calibrate_camera(image_location='images_taken/1latest_image_from_camera', co
         # save non-resized image
         cv.imwrite('pictures_from_rig/post_process/1chequered_cal' + '.jpg', img)
 
-        print()
-        print('press "q" to exit')
+        # print()
+        # print('press "q" to exit')
         # show image until user presses 'q'
-        while True:
-            cv.imshow('found corners', resized_image)
-            # press 'q' button to exit image
-            if cv.waitKey(1) & 0xFF == ord('q'):
-                break
+        # while True:
+        #    cv.imshow('found corners', resized_image)
+        #    # press 'q' button to exit image
+        #    if cv.waitKey(1) & 0xFF == ord('q'):
+        #        break
 
     return pix_mm_ratio, ratio_error
 
