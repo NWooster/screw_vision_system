@@ -13,6 +13,7 @@ import sys
 # custom imports
 from take_picture import take_picture
 from calibrate_camera import calibrate_camera
+from screw_location import screw_location
 
 
 def main(argv):
@@ -22,6 +23,7 @@ def main(argv):
 
     # take_picture(0)  # take image from webcam (camera 1)
     pix_to_mm, ratio_error = calibrate_camera(image_location='images_taken/with_25_square.jpg')
+    screw_location(image_location='images_taken/with_25_square.jpg')
 
     return 0
 
