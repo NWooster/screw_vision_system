@@ -13,6 +13,7 @@ import cv2 as cv
 
 
 def resize(image, req_width):
+
     """
     Function to return resized
     image with correct aspect ratio.
