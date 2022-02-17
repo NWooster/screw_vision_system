@@ -50,14 +50,14 @@ def calibrate_camera(columns, rows):
         criteria = (cv.TERM_CRITERIA_EPS + cv.TERM_CRITERIA_MAX_ITER, 50, 0.0001)
         corners_sub_pix = cv.cornerSubPix(gray, found_corners, (5, 5), (-1, -1), criteria)
 
-        # checks
-        corner_location = corners_sub_pix
+        # pixel checks
+        corner_location = corners_sub_pix  # order goes up from bottom of column1, then next column starts bottom
         print(corner_location)
         pixel_size = img.shape[:2]
-        print(pixel_size)
+        print('x:', pixel_size[1], 'y:', pixel_size[0])  # longer x creates rectangle
         cv.circle(img, (407, 1702), 50, (0, 0, 255))  # draw a circle somewhere
         cv.circle(img, (408, 1648), 50, (0, 255, 0))  # draw a circle somewhere
-        cv.circle(img, (10, 2592), 50, (255, 0, 0))  # draw a circle somewhere
+        cv.circle(img, (462, 1703), 50, (255, 0, 0))  # draw a circle somewhere
 
         # draw corners onto image
         cv.drawChessboardCorners(img, (columns, rows), corners_sub_pix, ret)
