@@ -21,7 +21,7 @@ def main(argv):
     """
 
     # take_picture(0)  # take image from webcam (camera 1)
-    calibrate_camera(7, 7, 25, 25)
+    pix_to_mm, ratio_error = calibrate_camera(image_location='images_taken/with_25_square.jpg')
 
     return 0
 
