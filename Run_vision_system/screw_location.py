@@ -11,14 +11,29 @@ The main python script to run screw image detection system
 import cv2 as cv
 import numpy as np
 
-# custom import
-from resize_to_fit_screen import resize
+
+def mm_screw_location(pix_to_mm, ratio_error, image_location='images_taken/1latest_image_from_camera'):
+
+    """
+    Screw location function for mm coordinates.
+    """
+
+    # call pixel location function which returns screw centres
+    pix_locations = pixel_screw_location(image_location= image_location)
+
+    # convert to mm coordinates
+    mm_locations = pix_locations * pix_to_mm
+
+    # find max error in mm
+    max_mm_error = np.amax(mm_locations) * ratio_error
+
+    return mm_locations, max_mm_error
 
 
 # loads image, pre-process it, apply hough circle detection
-def screw_location(image_location='images_taken/1latest_image_from_camera'):
+def pixel_screw_location(image_location='images_taken/1latest_image_from_camera'):
     """
-    Screw location function.
+    Screw location function for pixel coordinates.
     """
 
     # labels where image is
@@ -72,8 +87,10 @@ def screw_location(image_location='images_taken/1latest_image_from_camera'):
     circles = cv.HoughCircles(blur_image, cv.HOUGH_GRADIENT, dp, min_dist,
                               param1=param1, param2=param2,
                               minRadius=min_r, maxRadius=max_r)
-    # circles_og = circles
-    # print('circles_og:', circles_og)
+
+    # get screw centres and radius into np.array
+    screw_locations = np.array(circles)
+    screw_locations = np.squeeze(screw_locations, axis=0)  # remove redundant dimension
 
     # initialise final image
     final_image = initial_image
@@ -81,9 +98,9 @@ def screw_location(image_location='images_taken/1latest_image_from_camera'):
     # draw the detected circles
     if circles is not None:
         # removes decimals
-        circles = np.uint16(np.around(circles))
-        # print('circles:', circles)
-        for i in circles[0, :]:
+        circles_draw = np.uint16(np.around(circles))
+        # print('circles drawn:', circles_draw)
+        for i in circles_draw[0, :]:
             center = (i[0], i[1])
             # circle center
             cv.circle(final_image, center, 1, (0, 100, 100), 3)
@@ -93,15 +110,11 @@ def screw_location(image_location='images_taken/1latest_image_from_camera'):
             cv.circle(final_image, center, radius, (255, 0, 255), 3)
 
     # call imported resize image function specify required width (default 600)
-    ##resized_image = resize(final_image, 600)
+    # resized_image = resize(final_image, 600)
     # show resized image
-    ##cv.imshow("detected screws", resized_image)
+    # cv.imshow("detected screws", resized_image)
 
     # save image as filename.jpeg
-    #cv.imwrite('auto_save_images/2camera_screws_detected' + '.jpg', final_image)
     cv.imwrite('images_processed/1screw_output' + '.jpg', final_image)
 
-    # wait for user to press exit
-    cv.waitKey(0)
-
-    return 0
+    return screw_locations
