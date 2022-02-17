@@ -15,7 +15,10 @@ import time
 
 def take_picture(camera):
 
-    """Take picture function including time to autofocus camera"""
+    """
+    Take picture function including time to autofocus camera.
+    External camera = 1 and laptop camera = 0.
+    """
 
     # define camera (width pixels must be 0.75 of height)
     pixel_w = 1944  # default 1944
