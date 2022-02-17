@@ -22,13 +22,20 @@ def main(argv):
     """
     Main function called to run the vision algorithm.
     """
+
+    # define cameras to connect to
     webcam = 1
     laptop_cam = 0
-    take_picture(laptop_cam)  # take image from webcam (camera 1)
+
+    take_picture(laptop_cam, 5)  # take image from webcam (camera 1) with specified autofocus time
+
     pix_to_mm, ratio_error = calibrate_camera(image_location='images_taken/with_25_square.jpg')  # find pixel/mm ratio
+
+    # output screw locations in mm
     screw_locations, max_mm_error = mm_screw_location(pix_to_mm, ratio_error, image_location='images_taken'
                                                                                              '/with_25_square.jpg')
 
+    # print outputs
     print('screw locations:', screw_locations)
     print()
 
