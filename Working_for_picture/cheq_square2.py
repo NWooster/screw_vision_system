@@ -10,14 +10,16 @@ Script for chess board camera calibration.
 
 import cv2 as cv
 import numpy as np
+import math
 from resize import resize
 
 
-def calibrate_camera(columns, rows, ):
+def calibrate_camera(columns, rows, width, height):
     """
         `columns` and `rows` are the number of inside corners in the
         chessboard's columns and rows.
-        'length' is the length in mm of the side of the chessboard.
+        'width' is the length in mm of the side of the chessboard.
+        'height' is the length in mm of the side of the chessboard.
         """
 
     # load image
@@ -60,7 +62,6 @@ def calibrate_camera(columns, rows, ):
         # cv.circle(img, (407, 1702), 50, (0, 0, 255))  # draw a circle somewhere
 
         # select 4 corners
-        print(corner_location)
         bl_corner = corner_location[0, :]  # extract bottom left corner
         bl_corner_rnd = np.rint(bl_corner)  # round pixel float to nearest integer
         cv.circle(img, (int(bl_corner_rnd[0]), int(bl_corner_rnd[1])), 50, (0, 0, 255))  # draw circle at location
@@ -77,10 +78,21 @@ def calibrate_camera(columns, rows, ):
         tr_corner_rnd = np.rint(tr_corner)  # round pixel float to nearest integer
         cv.circle(img, (int(tr_corner_rnd[0]), int(tr_corner_rnd[1])), 50, (255, 255, 0))  # draw circle at location
 
-        # calculate mm distance from pixel distance
-        
+        # calc pixel distance
+        pix_width1 = distance(tl_corner_rnd[0], tl_corner_rnd[1], tr_corner_rnd[0], tr_corner_rnd[1])
+        print(pix_width1)
+        pix_width2 = distance(bl_corner_rnd[0], bl_corner_rnd[1], br_corner_rnd[0], br_corner_rnd[1])
+        print(pix_width2)
+        pix_height1 = distance(tl_corner_rnd[0], tl_corner_rnd[1], bl_corner_rnd[0], bl_corner_rnd[1])
+        print(pix_height1)
+        pix_height2 = distance(tr_corner_rnd[0], tr_corner_rnd[1], br_corner_rnd[0], br_corner_rnd[1])
+        print(pix_height2)
+
+        ##ADD extra 2 squares!
 
 
+        mm_width = width  # mm
+        mm_height = height  # mm
 
         # draw corners onto image
         cv.drawChessboardCorners(img, (columns, rows), corners_sub_pix, ret)
@@ -97,5 +109,11 @@ def calibrate_camera(columns, rows, ):
     return found_corners
 
 
+# function to return distance between 2 points
+def distance(x1, y1, x2, y2):
+    dist = math.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2)
+    return dist
+
+
 if __name__ == "__main__":
-    calibrate_camera(7, 7)
+    calibrate_camera(7, 7, 25, 25)
