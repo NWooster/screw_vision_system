@@ -9,13 +9,15 @@ Script for chess board camera calibration.
 """
 
 import cv2 as cv
+import numpy as np
 from resize import resize
 
 
-def calibrate_camera(columns, rows):
+def calibrate_camera(columns, rows, ):
     """
-        `columns` and `rows` should be the number of inside corners in the
+        `columns` and `rows` are the number of inside corners in the
         chessboard's columns and rows.
+        'length' is the length in mm of the side of the chessboard.
         """
 
     # load image
@@ -50,22 +52,41 @@ def calibrate_camera(columns, rows):
         criteria = (cv.TERM_CRITERIA_EPS + cv.TERM_CRITERIA_MAX_ITER, 50, 0.0001)
         corners_sub_pix = cv.cornerSubPix(gray, found_corners, (5, 5), (-1, -1), criteria)
 
-        # pixel checks
-        corner_location = corners_sub_pix  # order goes up from bottom of column1, then next column starts bottom
+        # corner location and pixel array
+        corner_location = np.array(corners_sub_pix)  # goes up from bottom of column1, then next column starts bottom
+        corner_location = np.squeeze(corner_location, axis=1)  # remove redundant array dimension
+        # pixel_size = img.shape[:2]
+        # print('x:', pixel_size[1], 'y:', pixel_size[0])  # longer x creates rectangle
+        # cv.circle(img, (407, 1702), 50, (0, 0, 255))  # draw a circle somewhere
+
+        # select 4 corners
         print(corner_location)
-        pixel_size = img.shape[:2]
-        print('x:', pixel_size[1], 'y:', pixel_size[0])  # longer x creates rectangle
-        cv.circle(img, (407, 1702), 50, (0, 0, 255))  # draw a circle somewhere
-        cv.circle(img, (408, 1648), 50, (0, 255, 0))  # draw a circle somewhere
-        cv.circle(img, (462, 1703), 50, (255, 0, 0))  # draw a circle somewhere
+        bl_corner = corner_location[0, :]  # extract bottom left corner
+        bl_corner_rnd = np.rint(bl_corner)  # round pixel float to nearest integer
+        cv.circle(img, (int(bl_corner_rnd[0]), int(bl_corner_rnd[1])), 50, (0, 0, 255))  # draw circle at location
+
+        tl_corner = corner_location[6, :]  # extract top left corner
+        tl_corner_rnd = np.rint(tl_corner)  # round pixel float to nearest integer
+        cv.circle(img, (int(tl_corner_rnd[0]), int(tl_corner_rnd[1])), 50, (0, 255, 0))  # draw circle at location
+
+        br_corner = corner_location[42, :]  # extract bottom right corner
+        br_corner_rnd = np.rint(br_corner)  # round pixel float to nearest integer
+        cv.circle(img, (int(br_corner_rnd[0]), int(br_corner_rnd[1])), 50, (255, 0, 0))  # draw circle at location
+
+        tr_corner = corner_location[48, :]  # extract top right corner
+        tr_corner_rnd = np.rint(tr_corner)  # round pixel float to nearest integer
+        cv.circle(img, (int(tr_corner_rnd[0]), int(tr_corner_rnd[1])), 50, (255, 255, 0))  # draw circle at location
+
+        # calculate mm distance from pixel distance
+        
+
+
 
         # draw corners onto image
         cv.drawChessboardCorners(img, (columns, rows), corners_sub_pix, ret)
         resized_image = resize(img, 800)  # resize image to fit screen
-
         # save non-resized image
         cv.imwrite('pictures_from_rig/post_process/1chequered_cal' + '.jpg', img)
-
         # show image until user presses 'q'
         while True:
             cv.imshow('found corners', resized_image)
