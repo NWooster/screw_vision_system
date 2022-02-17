@@ -16,7 +16,7 @@ from resize import resize
 
 def calibrate_camera(columns, rows, width, height):
     """
-        `columns` and `rows` are the number of inside corners in the
+        `columns` and `rows` are the number of INSIDE corners in the
         chessboard's columns and rows.
         'width' is the length in mm of the side of the chessboard.
         'height' is the length in mm of the side of the chessboard.
@@ -57,8 +57,8 @@ def calibrate_camera(columns, rows, width, height):
         # corner location and pixel array
         corner_location = np.array(corners_sub_pix)  # goes up from bottom of column1, then next column starts bottom
         corner_location = np.squeeze(corner_location, axis=1)  # remove redundant array dimension
-        # pixel_size = img.shape[:2]
-        # print('x:', pixel_size[1], 'y:', pixel_size[0])  # longer x creates rectangle
+        pixel_size = img.shape[:2]
+        print('image size x:', pixel_size[1], 'y:', pixel_size[0])  # longer x creates rectangle
         # cv.circle(img, (407, 1702), 50, (0, 0, 255))  # draw a circle somewhere
 
         # select 4 corners
@@ -66,33 +66,45 @@ def calibrate_camera(columns, rows, width, height):
         bl_corner_rnd = np.rint(bl_corner)  # round pixel float to nearest integer
         cv.circle(img, (int(bl_corner_rnd[0]), int(bl_corner_rnd[1])), 50, (0, 0, 255))  # draw circle at location
 
-        tl_corner = corner_location[6, :]  # extract top left corner
+        tl_corner = corner_location[columns-1, :]  # extract top left corner
         tl_corner_rnd = np.rint(tl_corner)  # round pixel float to nearest integer
         cv.circle(img, (int(tl_corner_rnd[0]), int(tl_corner_rnd[1])), 50, (0, 255, 0))  # draw circle at location
 
-        br_corner = corner_location[42, :]  # extract bottom right corner
+        br_corner = corner_location[columns*rows-rows, :]  # extract bottom right corner
         br_corner_rnd = np.rint(br_corner)  # round pixel float to nearest integer
         cv.circle(img, (int(br_corner_rnd[0]), int(br_corner_rnd[1])), 50, (255, 0, 0))  # draw circle at location
 
-        tr_corner = corner_location[48, :]  # extract top right corner
+        tr_corner = corner_location[columns*rows-1, :]  # extract top right corner
         tr_corner_rnd = np.rint(tr_corner)  # round pixel float to nearest integer
         cv.circle(img, (int(tr_corner_rnd[0]), int(tr_corner_rnd[1])), 50, (255, 255, 0))  # draw circle at location
 
-        # calc pixel distance
-        pix_width1 = distance(tl_corner_rnd[0], tl_corner_rnd[1], tr_corner_rnd[0], tr_corner_rnd[1])
-        print(pix_width1)
-        pix_width2 = distance(bl_corner_rnd[0], bl_corner_rnd[1], br_corner_rnd[0], br_corner_rnd[1])
-        print(pix_width2)
-        pix_height1 = distance(tl_corner_rnd[0], tl_corner_rnd[1], bl_corner_rnd[0], bl_corner_rnd[1])
-        print(pix_height1)
-        pix_height2 = distance(tr_corner_rnd[0], tr_corner_rnd[1], br_corner_rnd[0], br_corner_rnd[1])
-        print(pix_height2)
+        # calc pixel distance between corners
+        pix_width1 = distance(tl_corner_rnd[0], tl_corner_rnd[1], tr_corner_rnd[0], tr_corner_rnd[1])  # top side
+        pix_width2 = distance(bl_corner_rnd[0], bl_corner_rnd[1], br_corner_rnd[0], br_corner_rnd[1])  # bottom side
+        pix_height1 = distance(tl_corner_rnd[0], tl_corner_rnd[1], bl_corner_rnd[0], bl_corner_rnd[1])  # left side
+        pix_height2 = distance(tr_corner_rnd[0], tr_corner_rnd[1], br_corner_rnd[0], br_corner_rnd[1])  # right side
 
-        ##ADD extra 2 squares!
+        # calc error range from two different possible corners
+        pix_width_error = abs(pix_width1 - pix_width2)
+        pix_height_error = abs(pix_height1 - pix_height2)
+        # print('width error in pixels:', pix_width_error)
+        # print('height error in pixels:', pix_height_error)
 
+        # use average to calc lengths of whole board
+        ave_pix_width = (pix_width1 + pix_width2)/2  # width of inside board
+        ave_pix_height = (pix_height1 + pix_height2)/2  # height of inside board
+        pix_all_width = (ave_pix_width / rows - 1) * (rows + 1)  # width of whole board
+        pix_all_height = (ave_pix_height / columns - 1) * (columns + 1)  # height of whole board
 
+        # calculate pixel to mm ratio
         mm_width = width  # mm
         mm_height = height  # mm
+        ratio1 = mm_width/pix_all_width  # 1 pixel is this many mm
+        ratio2 = mm_height/pix_all_height  # 1 pixel is this many mm
+        ratio_error = abs(ratio1 - ratio2)
+        ave_ratio = (ratio1 + ratio2) / 2  # 1 pixel is this many mm
+        print('1 pixel is ', ave_ratio, 'mm and 1mm is ', 1/ave_ratio, ' many pixels')
+        # print('ratio of mm per pixel error:', ratio_error)
 
         # draw corners onto image
         cv.drawChessboardCorners(img, (columns, rows), corners_sub_pix, ret)
