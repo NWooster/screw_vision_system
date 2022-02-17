@@ -14,7 +14,7 @@ import math
 from resize_to_fit_screen import resize
 
 
-def calibrate_camera(image='images_taken / with_25_square.jpg', columns=7, rows=7, width=25, height=25):
+def calibrate_camera(image_location='images_taken/1latest_image_from_camera', columns=7, rows=7, width=25, height=25):
     """
         `columns` and `rows` are the number of INSIDE corners in the
         chessboard's columns and rows.
@@ -23,7 +23,7 @@ def calibrate_camera(image='images_taken / with_25_square.jpg', columns=7, rows=
         """
 
     # load image
-    filename = str(image)  # default 149_square.jpg
+    filename = image_location  # image location
     img = cv.imread(cv.samples.findFile(filename), cv.IMREAD_COLOR)
 
     # grayscale
@@ -112,6 +112,9 @@ def calibrate_camera(image='images_taken / with_25_square.jpg', columns=7, rows=
         resized_image = resize(img, 800)  # resize image to fit screen
         # save non-resized image
         cv.imwrite('pictures_from_rig/post_process/1chequered_cal' + '.jpg', img)
+
+        print()
+        print('press "q" to exit')
         # show image until user presses 'q'
         while True:
             cv.imshow('found corners', resized_image)
