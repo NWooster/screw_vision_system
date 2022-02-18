@@ -19,7 +19,7 @@ def mm_screw_location(pix_to_mm, ratio_error, image_location='images_taken/1late
     """
 
     # call pixel location function which returns screw centres
-    pix_locations = pixel_screw_location(image_location= image_location)
+    pix_locations = pixel_screw_location(image_location=image_location)
 
     # convert to mm coordinates
     mm_locations = pix_locations * pix_to_mm
@@ -77,10 +77,10 @@ def pixel_screw_location(image_location='images_taken/1latest_image_from_camera'
 
     # parameters for Hough Circle algorithm
     dp = 1  # high dp means low matrix resolution so takes circles that do not have clear boundary (default 1)
-    min_r = 12  # min pixel radius of screw
-    max_r = 30  # max pixel radius of screw
-    min_dist = int(min_r * 4)  # min distance between two screws
-    param1 = 90  # if low then more weak edges will be found so weak circles returned (default 100)
+    min_r = 15  # min pixel radius of screw
+    max_r = 40  # max pixel radius of screw
+    min_dist = int(min_r * 2)  # min distance between two screws
+    param1 = 60  # if low then more weak edges will be found so weak circles returned (default 100)
     param2 = 30  # if low then more circles will be returned by HoughCircles (default 30)
 
     # apply OpenCV HoughCircle algorithm
