@@ -12,7 +12,7 @@ import sys
 import numpy as np
 
 # custom imports
-from take_picture import take_picture
+#from take_picture import take_picture
 from calibrate_camera import calibrate_camera
 from screw_location import mm_screw_location
 
