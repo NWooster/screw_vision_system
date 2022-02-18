@@ -12,7 +12,7 @@ import sys
 import numpy as np
 
 # custom imports
-#from take_picture import take_picture
+from take_picture import take_picture
 from calibrate_camera import calibrate_camera
 from screw_location import mm_screw_location
 
@@ -27,9 +27,10 @@ def main(argv):
     webcam = 1
     laptop_cam = 0
 
-    take_picture(laptop_cam, 5)  # take image from webcam (camera 1) with specified autofocus time
+    #take_picture(laptop_cam, 5)  # take image from webcam (camera 1) with specified autofocus time
 
-    pix_to_mm, ratio_error = calibrate_camera(image_location='images_taken/with_25_square.jpg')  # find pixel/mm ratio
+    # find pixel/mm ratio
+    pix_to_mm, ratio_error = calibrate_camera(image_location='images_taken/with_25_square.jpg')
 
     # output screw locations in mm
     screw_locations, max_mm_error = mm_screw_location(pix_to_mm, ratio_error, image_location='images_taken'
