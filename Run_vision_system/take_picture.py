@@ -4,7 +4,7 @@
 
 Nathan Wooster
 Feb 2022
-Script for accessing camera.
+Script for accessing camera and taking an image.
 
 """
 
