@@ -4,7 +4,7 @@
 
 Nathan Wooster
 Jan 2022
-The main python script to run screw image detection system
+Python script to work out screw locations.
 
 '''
 
