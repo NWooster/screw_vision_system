@@ -118,3 +118,6 @@ def pixel_screw_location(image_location='images_taken/1latest_image_from_camera'
     cv.imwrite('images_processed/1screw_output' + '.jpg', final_image)
 
     return screw_locations
+
+if __name__ == "__main__":
+    mm_screw_location()

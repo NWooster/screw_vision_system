@@ -67,3 +67,6 @@ def take_picture(camera, autofocus_time=4):
 
     # end of function
     return 0
+
+if __name__ == "__main__":
+    take_picture()
