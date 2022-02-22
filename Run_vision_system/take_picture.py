@@ -8,13 +8,11 @@ Script for accessing camera and taking an image.
 
 """
 
-
 import cv2 as cv
 import time
 
 
 def take_picture(camera, autofocus_time=4):
-
     """
     Take picture function including time to autofocus camera.
     External camera = 1 and laptop camera = 0.
@@ -22,7 +20,7 @@ def take_picture(camera, autofocus_time=4):
 
     # define camera (width pixels must be 0.75 of height)
     pixel_w = 1944  # default 1944
-    pixel_h = pixel_w/0.75  # default 2592 (ratio 0.75)
+    pixel_h = pixel_w / 0.75  # default 2592 (ratio 0.75)
 
     # connect to camera
     print('connecting to camera...')
@@ -54,7 +52,7 @@ def take_picture(camera, autofocus_time=4):
         ret, frame = cap.read()
 
         pixel_size = frame.shape[:2]  # return pixel resolution x,y
-        no_of_pixels = (frame.shape[0] * frame.shape[1])/1000000  # calc resolution
+        no_of_pixels = (frame.shape[0] * frame.shape[1]) / 1000000  # calc resolution
         print('pixel size:', pixel_size)
         print('no. of pixels:', no_of_pixels, 'MP')
 
@@ -68,5 +66,6 @@ def take_picture(camera, autofocus_time=4):
     # end of function
     return 0
 
+
 if __name__ == "__main__":
-    take_picture()
+    take_picture(1)
