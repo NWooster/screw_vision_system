@@ -112,6 +112,9 @@ def calibrate_camera(image_location='images_taken/1latest_image_from_camera', co
         # save non-resized image
         cv.imwrite('images_processed/1chequered_cal' + '.jpg', img)
 
+        # return top left corner coordinates in pixels
+        tl_corner_pix = np.array(tl_corner)
+
         # print()
         # print('press "q" to exit')
         # show image until user presses 'q'
@@ -121,7 +124,7 @@ def calibrate_camera(image_location='images_taken/1latest_image_from_camera', co
         #    if cv.waitKey(1) & 0xFF == ord('q'):
         #        break
 
-    return pix_mm_ratio, ratio_error
+    return pix_mm_ratio, tl_corner_pix, ratio_error
 
 
 # function to return distance between 2 points
@@ -131,4 +134,5 @@ def distance(x1, y1, x2, y2):
 
 
 if __name__ == "__main__":
-    calibrate_camera(image_location='images_taken/with_25white_square.jpg')
+    output = calibrate_camera(image_location='images_taken/with_25white_square.jpg')
+    print(output)

@@ -12,20 +12,25 @@ import cv2 as cv
 import numpy as np
 
 
-def mm_screw_location(pix_to_mm, ratio_error, image_location='images_taken/1latest_image_from_camera'):
-
+def mm_screw_location(pix_to_mm, origin_pix, ratio_error, image_location='images_taken/1latest_image_from_camera'):
     """
     Screw location function for mm coordinates.
+    Calculates it from a given origin (normally top left corner of chessboard is specified).
     """
 
-    # call pixel location function which returns screw centres
+    # call pixel location function which returns screw centres and radii
     pix_locations = pixel_screw_location(image_location=image_location)
 
+    # find pixel location with relation to specified origin (could be -ve as above origin)
+    origin_pix = origin_pix.reshape(1, 2)  # reshape
+    origin_pix = np.hstack((origin_pix, np.zeros((origin_pix.shape[0], 1), dtype=origin_pix.dtype)))  # add zero col
+    pix_loc_from_origin = pix_locations - origin_pix  # take away to get screw pix location from origin
+
     # convert to mm coordinates
-    mm_locations = pix_locations * pix_to_mm
+    mm_locations = pix_loc_from_origin * pix_to_mm
 
     # find max error in mm
-    max_mm_error = np.amax(mm_locations) * ratio_error
+    max_mm_error = np.amax(abs(mm_locations)) * ratio_error
 
     return mm_locations, max_mm_error
 
@@ -118,6 +123,7 @@ def pixel_screw_location(image_location='images_taken/1latest_image_from_camera'
     cv.imwrite('images_processed/1screw_output' + '.jpg', final_image)
 
     return screw_locations
+
 
 if __name__ == "__main__":
     mm_screw_location()

@@ -29,11 +29,11 @@ def main_vision(argv):
     # take_picture.take_picture(laptop_cam, 5)  # take image from webcam (camera 1) with specified autofocus time
 
     # find pixel/mm ratio
-    pix_to_mm, ratio_error = calibrate_camera.calibrate_camera(image_location='images_taken/'
+    pix_to_mm, tl_corner_pix, ratio_error = calibrate_camera.calibrate_camera(image_location='images_taken/'
                                                                               '1latest_image_from_camera.jpg')
 
     # output screw locations in mm
-    screw_locations, max_mm_error = screw_location.mm_screw_location(pix_to_mm, ratio_error,
+    screw_locations, max_mm_error = screw_location.mm_screw_location(pix_to_mm, tl_corner_pix, ratio_error,
                                                                      image_location='images_taken/'
                                                                                     '1latest_image_from_camera.jpg')
 
@@ -59,6 +59,8 @@ def main_vision(argv):
 
 
 if __name__ == "__main__":
+
+    # what next code will do
     screw_coords = main_vision(sys.argv[1:])
     screw_coord = np.append(screw_coords[0, :], [0])
     print('screw_coord', screw_coord)
