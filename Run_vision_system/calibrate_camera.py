@@ -55,27 +55,27 @@ def calibrate_camera(image_location='images_taken/1latest_image_from_camera', co
         corners_sub_pix = cv.cornerSubPix(gray, found_corners, (5, 5), (-1, -1), criteria)
 
         # corner location and pixel array
-        corner_location = np.array(corners_sub_pix)  # goes up from bottom of column1, then next column starts bottom
+        corner_location = np.array(corners_sub_pix)  # starts at top, left to right like pixels
         corner_location = np.squeeze(corner_location, axis=1)  # remove redundant array dimension
         pixel_size = img.shape[:2]
         # print('image size x:', pixel_size[1], 'y:', pixel_size[0])  # longer x creates rectangle
 
         # select 4 corners
-        bl_corner = corner_location[0, :]  # extract bottom left corner
-        bl_corner_rnd = np.rint(bl_corner)  # round pixel float to nearest integer
-        cv.circle(img, (int(bl_corner_rnd[0]), int(bl_corner_rnd[1])), 50, (0, 0, 255))  # draw circle at location
-
-        tl_corner = corner_location[columns - 1, :]  # extract top left corner
+        tl_corner = corner_location[0, :]  # extract top left corner
         tl_corner_rnd = np.rint(tl_corner)  # round pixel float to nearest integer
-        cv.circle(img, (int(tl_corner_rnd[0]), int(tl_corner_rnd[1])), 50, (0, 255, 0))  # draw circle at location
+        cv.circle(img, (int(tl_corner_rnd[0]), int(tl_corner_rnd[1])), 50, (0, 0, 255))  # draw circle at location
 
-        br_corner = corner_location[columns * rows - rows, :]  # extract bottom right corner
-        br_corner_rnd = np.rint(br_corner)  # round pixel float to nearest integer
-        cv.circle(img, (int(br_corner_rnd[0]), int(br_corner_rnd[1])), 50, (255, 0, 0))  # draw circle at location
-
-        tr_corner = corner_location[columns * rows - 1, :]  # extract top right corner
+        tr_corner = corner_location[columns - 1, :]  # extract top right corner
         tr_corner_rnd = np.rint(tr_corner)  # round pixel float to nearest integer
-        cv.circle(img, (int(tr_corner_rnd[0]), int(tr_corner_rnd[1])), 50, (255, 255, 0))  # draw circle at location
+        cv.circle(img, (int(tr_corner_rnd[0]), int(tr_corner_rnd[1])), 50, (0, 255, 0))  # draw circle at location
+
+        bl_corner = corner_location[columns * rows - rows, :]  # extract bottom left corner
+        bl_corner_rnd = np.rint(bl_corner)  # round pixel float to nearest integer
+        cv.circle(img, (int(bl_corner_rnd[0]), int(bl_corner_rnd[1])), 50, (255, 0, 0))  # draw circle at location
+
+        br_corner = corner_location[columns * rows - 1, :]  # extract bottom right corner
+        br_corner_rnd = np.rint(br_corner)  # round pixel float to nearest integer
+        cv.circle(img, (int(br_corner_rnd[0]), int(br_corner_rnd[1])), 50, (255, 255, 0))  # draw circle at location
 
         # calc pixel distance between corners
         pix_width1 = distance(tl_corner_rnd[0], tl_corner_rnd[1], tr_corner_rnd[0], tr_corner_rnd[1])  # top side
@@ -110,7 +110,7 @@ def calibrate_camera(image_location='images_taken/1latest_image_from_camera', co
         cv.drawChessboardCorners(img, (columns, rows), corners_sub_pix, ret)
         resized_image = resize(img, 800)  # resize image to fit screen
         # save non-resized image
-        cv.imwrite('pictures_from_rig/post_process/1chequered_cal' + '.jpg', img)
+        cv.imwrite('images_processed/1chequered_cal' + '.jpg', img)
 
         # print()
         # print('press "q" to exit')
@@ -131,4 +131,4 @@ def distance(x1, y1, x2, y2):
 
 
 if __name__ == "__main__":
-    calibrate_camera()
+    calibrate_camera(image_location='images_taken/with_25white_square.jpg')
