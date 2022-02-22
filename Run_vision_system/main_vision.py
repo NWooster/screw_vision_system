@@ -38,12 +38,12 @@ def main_vision(argv):
                                                                                     '1latest_image_from_camera.jpg')
 
     # print outputs
-    print('screw locations:', screw_locations)
-    print()
+    #print('screw locations:', screw_locations)
+    #print()
 
-    screw_radii = screw_locations[:, 2]
-    print('screw radii:', screw_radii)
-    print()
+    #screw_radii = screw_locations[:, 2]
+    #print('screw radii:', screw_radii)
+    #print()
 
     screw_centres = screw_locations[:, :2]
     print('screw centres:', screw_centres)
@@ -64,3 +64,6 @@ if __name__ == "__main__":
     screw_coords = main_vision(sys.argv[1:])
     screw_coord = np.append(screw_coords[0, :], [0])
     print('screw_coord', screw_coord)
+    print()
+    print('Add this to the constant (x,y) distance of gantry (0,0) to the INNER top left corner to get '
+          'where to move gantry to in mm.')
