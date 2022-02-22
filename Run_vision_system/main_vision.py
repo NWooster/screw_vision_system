@@ -18,7 +18,6 @@ import screw_location
 
 
 def main_vision(argv):
-
     """
     Main function called to run the vision algorithm.
     """
@@ -27,14 +26,15 @@ def main_vision(argv):
     webcam = 1
     laptop_cam = 0
 
-    take_picture.take_picture(laptop_cam, 5)  # take image from webcam (camera 1) with specified autofocus time
+    # take_picture.take_picture(laptop_cam, 5)  # take image from webcam (camera 1) with specified autofocus time
 
     # find pixel/mm ratio
     pix_to_mm, ratio_error = calibrate_camera.calibrate_camera(image_location='images_taken/with_25_square.jpg')
 
     # output screw locations in mm
-    screw_locations, max_mm_error = screw_location.mm_screw_location(pix_to_mm, ratio_error, image_location='images_taken'
-                                                                                             '/with_25_square.jpg')
+    screw_locations, max_mm_error = screw_location.mm_screw_location(pix_to_mm, ratio_error,
+                                                                     image_location='images_taken'
+                                                                                    '/with_25_square.jpg')
 
     # print outputs
     print('screw locations:', screw_locations)
@@ -58,4 +58,6 @@ def main_vision(argv):
 
 
 if __name__ == "__main__":
-    main_vision(sys.argv[1:])
+    screw_coords = main_vision(sys.argv[1:])
+    screw_coord = np.append(screw_coords[0, :], [0])
+    print('screw_coord', screw_coord)
