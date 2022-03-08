@@ -30,30 +30,34 @@ def main_vision(argv):
 
     # find pixel/mm ratio
     pix_to_mm, tl_corner_pix, ratio_error = calibrate_camera.calibrate_camera(image_location='images_taken/'
-                                                                              '1latest_image_from_camera.jpg')
+                                                                                             '1latest_image_from_camera.jpg')
 
     # output screw locations in mm
     screw_locations, max_mm_error = screw_location.mm_screw_location(pix_to_mm, tl_corner_pix, ratio_error,
                                                                      image_location='images_taken/'
                                                                                     '1latest_image_from_camera.jpg')
 
-    # print outputs
-    #print('screw locations:', screw_locations)
-    #print()
-
-    #screw_radii = screw_locations[:, 2]
-    #print('screw radii:', screw_radii)
-    #print()
-
+    # select centres only
     screw_centres = screw_locations[:, :2]
-    print('screw centres:', screw_centres)
-    print()
 
-    print('number of screws found: ', np.shape(screw_locations)[0])
-    print()
+    # print outputs
+
+    # print('screw locations:', screw_locations)
+    # print()
+
+    # screw_radii = screw_locations[:, 2]
+    # print('screw radii:', screw_radii)
+    # print()
+
+    # print('screw centres:', screw_centres)
+    # print()
+
+    # print('number of screws found: ', np.shape(screw_locations)[0])
+    # print()
 
     print('max error is: ' + str(max_mm_error) + 'mm')
     print()
+    print('------------------------------')
 
     return screw_centres
 
@@ -61,9 +65,14 @@ def main_vision(argv):
 if __name__ == "__main__":
 
     # what next code will do
-    screw_coords = main_vision(sys.argv[1:])
-    screw_coord = np.append(screw_coords[0, :], [0])
-    print('screw_coord', screw_coord)
+    all_screw_coords = main_vision(sys.argv[0])  # runs vision algorithm
+    all_screw_coords = all_screw_coords[all_screw_coords[:, 1].argsort()]  # re-order based on y coordinate
+    print(all_screw_coords)
+
+    screw1_coord = all_screw_coords[0:]  # selects first screw coordinate
+    screw1_coord = np.append(screw1_coord[0, :], [0])  # appends a 0 for the Z axis
+
+    print('screw_coord', screw1_coord)
     print()
-    print('Add this to the constant (x,y) distance of gantry (0,0) to the INNER top left corner to get '
+    print('Add this coordinate to the constant (x,y) distance of gantry (0,0) to the INNER top left corner to get '
           'where to move gantry to in mm.')
