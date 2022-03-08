@@ -68,6 +68,7 @@ if __name__ == "__main__":
     all_screw_coords = main_vision(sys.argv[0])  # runs vision algorithm
     all_screw_coords = all_screw_coords[all_screw_coords[:, 1].argsort()]  # re-order based on y coordinate
     print(all_screw_coords)
+    print()
 
     screw1_coord = all_screw_coords[0:]  # selects first screw coordinate
     screw1_coord = np.append(screw1_coord[0, :], [0])  # appends a 0 for the Z axis
