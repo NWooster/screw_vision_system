@@ -19,16 +19,16 @@ import screw_location
 
 # function to return average error between two sets of points
 def error(estimate, ground_truth):
-
     # if number of screws is not right
     if np.shape(estimate) != np.shape(ground_truth):
         print("WARNING: The number of screws found:", np.shape(estimate)[0],
-              ", does not match number of actual screws:", np.shape(ground_truth)[0])
+              ", does not match the number of actual screws:", np.shape(ground_truth)[0])
+    elif np.shape(estimate) == np.shape(ground_truth):
+        print("The number of screws found:", np.shape(estimate)[0],
+              ", does match the number of actual screws:", np.shape(ground_truth)[0])
 
     # initialise an array to store all the smallest distances to actual screws
     small_dist = np.full((np.shape(estimate)[0], 1), np.inf)
-    print(small_dist)
-    print()
 
     # calc smallest distance to known screw for each estimate screw location and put in array
     for i in range(np.shape(estimate)[0]):
@@ -36,12 +36,18 @@ def error(estimate, ground_truth):
             current_dist = distance(estimate[i, 0], estimate[i, 1], ground_truth[n, 0], ground_truth[n, 1])
             if current_dist < small_dist[i]:
                 small_dist[i] = current_dist
-                print(small_dist)
-                print()
 
-        print('--------------')
+    print(small_dist)
+    print()
 
-    e = 1
+    # calc mean error
+    e = sum(small_dist) / np.shape(estimate)[0]
+
+    print('mean error:', e, 'max error:', max(small_dist), 'min error:', min(small_dist))
+
+    # convert to mm to check
+    mm_to_pix = calibrate_camera.calibrate_camera(image_location='images_taken/1latest_image_from_camera.jpg')[0]
+    print('mm of these:', e * mm_to_pix, max(small_dist) * mm_to_pix, min(small_dist * mm_to_pix))
 
     return e
 
