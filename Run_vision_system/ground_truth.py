@@ -17,8 +17,8 @@ def click_event(event, x, y, flags, param):
         print(x_adjust, ",", y)
         pixel_loc.append([x_adjust, y])
         font = cv.FONT_HERSHEY_SIMPLEX
-        strXY = str(x_adjust) + ", " + str(y)
-        cv.putText(img, strXY, (x, y), font, 0.5, (255, 255, 0), 2)
+        str_xy = str(x_adjust) + ", " + str(y)
+        cv.putText(img, str_xy, (x, y), font, 0.5, (255, 255, 0), 2)
         cv.imshow("image", img)
 
     # shows the colour composition of that pixel in yellow
@@ -27,8 +27,8 @@ def click_event(event, x, y, flags, param):
         green = img[y, x, 1]
         red = img[y, x, 2]
         font = cv.FONT_HERSHEY_SIMPLEX
-        strBGR = str(blue) + ", " + str(green) + ", " + str(red)
-        cv.putText(img, strBGR, (x, y), font, 0.5, (0, 255, 255), 2)
+        str_bgr = str(blue) + ", " + str(green) + ", " + str(red)
+        cv.putText(img, str_bgr, (x, y), font, 0.5, (0, 255, 255), 2)
         cv.imshow("image", img)
 
 
@@ -69,6 +69,9 @@ elif side_of_image == "left":
     cv.imshow("image", img)
     # calling the mouse click event
     cv.setMouseCallback("image", click_event)
+
+else:
+    print('error: specify side of image to show')
 
 cv.waitKey(0)
 cv.destroyAllWindows()
