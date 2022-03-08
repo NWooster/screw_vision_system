@@ -33,16 +33,16 @@ def click_event(event, x, y, flags, param):
 
 
 # specify what side of image to show
-#side_of_image = "left"
-side_of_image = "right"
+side_of_image = "left"
+#side_of_image = "right"
 
 # image path
-filename = 'images_processed/1screw_output.jpg'
+filename = 'images_taken/1latest_image_from_camera.jpg'
 img = cv.imread(cv.samples.findFile(filename), cv.IMREAD_COLOR)
 
 # output image size
 pixel_size = img.shape[:2]
-print(pixel_size)
+# print(pixel_size)
 
 if side_of_image == "right":
 
@@ -73,5 +73,11 @@ elif side_of_image == "left":
 else:
     print('error: specify side of image to show')
 
-cv.waitKey(0)
+cv.waitKey(0)  # wait till user exits or presses q
+
+# save the pixel locations to .txt file
+screw_ground_truths = np.array(pixel_loc)
+print(screw_ground_truths)
+np.savetxt(side_of_image + "_side_screw_ground_truths.txt", screw_ground_truths, fmt='%g', delimiter=",")
+
 cv.destroyAllWindows()
