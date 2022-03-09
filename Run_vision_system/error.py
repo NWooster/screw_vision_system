@@ -25,11 +25,10 @@ def location_error(estimate, ground_truth):
 
     # if number of screws is not right
     if np.shape(estimate) != np.shape(ground_truth):
-        print("WARNING: The number of screws found:", np.shape(estimate)[0],
+        print("WARNING: Error in removing false positives and negatives as the number of screws found:", np.shape(estimate)[0],
               ", does not match the number of actual screws:", np.shape(ground_truth)[0])
     elif np.shape(estimate) == np.shape(ground_truth):
-        print("The number of screws found:", np.shape(estimate)[0],
-              ", does match the number of actual screws:", np.shape(ground_truth)[0])
+        pass
 
     # initialise an array to store all the smallest distances to actual screws
     small_dist = np.full((np.shape(estimate)[0], 1), np.inf)
@@ -41,36 +40,25 @@ def location_error(estimate, ground_truth):
             if current_dist < small_dist[i]:
                 small_dist[i] = current_dist
 
-    print(small_dist)
-    print()
-
     # calc mean error
     e = sum(small_dist) / np.shape(estimate)[0]
 
-    print('mean error:', e, 'max error:', max(small_dist), 'min error:', min(small_dist))
+    # print('mean error:', e, 'max error:', max(small_dist), 'min error:', min(small_dist))
 
     # convert to mm to check
-    mm_to_pix = calibrate_camera.calibrate_camera(image_location='images_taken/1latest_image_from_camera.jpg')[0]
-    print('mm of these:', e * mm_to_pix, max(small_dist) * mm_to_pix, min(small_dist * mm_to_pix))
+    # mm_to_pix = calibrate_camera.calibrate_camera(image_location='images_taken/1latest_image_from_camera.jpg')[0]
+    # print('mm of these:', e * mm_to_pix, max(small_dist) * mm_to_pix, min(small_dist * mm_to_pix))
 
     return e
 
 
-# function to calculate the number of false positives
+# function to calculate the number of false positives and negatives
 def false_pos_neg(estimate, ground_truth):
     """
     Function returns:
      - an array of the estimates with flag 1 if they are false positives (wrongly circled).
      - an array of the ground truths with flag 1 if they are false negatives (not found).
     """
-
-    # if number of screws is not right
-    if np.shape(estimate) != np.shape(ground_truth):
-        print("WARNING: The number of screws found:", np.shape(estimate)[0],
-              ", does not match the number of actual screws:", np.shape(ground_truth)[0])
-    elif np.shape(estimate) == np.shape(ground_truth):
-        print("The number of screws found:", np.shape(estimate)[0],
-              ", does match the number of actual screws:", np.shape(ground_truth)[0])
 
     # threshold pixel distance for being false pos and false neg
     threshold = 25  # pixels (0.07*25=1.75mm)
@@ -105,13 +93,54 @@ def false_pos_neg(estimate, ground_truth):
         if small_dist_gt[n] > threshold:
             ground_truth_flag[n, 2] = 1
 
-    # calc number of false pos and false neg detections
-    no_fp = sum(estimate_flag[:, 2])
-    no_fn = sum(ground_truth_flag[:, 2])
-
-    print('There are', no_fp, 'screws labelled as screws that are false and', no_fn, 'screws that were missed')
-
+    # return list if estimates and ground truths with false pos and false neg flags
     return estimate_flag, ground_truth_flag
+
+
+def total_error(estimate, ground_truth):
+    """
+    Function to return final error as combination
+    of false positives, negatives and location error displacement.
+    """
+
+    # if number of screws is not right
+    if np.shape(estimate) != np.shape(ground_truth):
+        print("The number of screws found:", np.shape(estimate)[0],
+              ", does not match the number of actual screws:", np.shape(ground_truth)[0])
+    elif np.shape(estimate) == np.shape(ground_truth):
+        print("The number of screws found:", np.shape(estimate)[0],
+              ", does match the number of actual screws:", np.shape(ground_truth)[0])
+
+    false_pos, false_neg = false_pos_neg(estimate, ground_truth)
+
+    # calc number of false pos, false neg and correct detections
+    no_fp = sum(false_pos[:, 2])
+    no_fn = sum(false_neg[:, 2])
+    no_correct = np.shape(estimate)[0] - no_fp
+
+    # error check
+    if np.shape(estimate)[0] - np.shape(ground_truth)[0] != no_fp - no_fn:
+        # number of false pos - false neg should equal difference in estimated and actual screw count
+        print('PROBLEM WITH ERROR CALCULATION')
+
+    # remove false pos and false neg from list
+    correct_estimates = np.delete(false_pos, np.where(false_pos[:, 2] == 1)[0], 0)
+    found_ground_truths = np.delete(false_neg, np.where(false_neg[:, 2] == 1)[0], 0)
+
+    # find location error
+    e_loc = location_error(correct_estimates, found_ground_truths)
+
+    # calculate total error from false neg, pos and location
+    fpos_weight = 1
+    fneg_weight = 1
+    e_total = e_loc + no_fp*fpos_weight + no_fn*fneg_weight
+
+    # print outputs
+    print('There are', no_fp, 'screws falsely labelled,', no_fn, 'screws that were missed and',
+          no_correct, 'correctly found.')
+    print('The location error of correctly found screws is:', e_loc, 'pixels.')
+
+    return e_total
 
 
 # function to return distance between 2 points
@@ -132,8 +161,10 @@ if __name__ == "__main__":
     ground_truths = np.loadtxt("combined_screw_ground_truths.txt", delimiter=",")
 
     # re-order based on y coordinate (doesn't actually matter)
-    screw_centres_found = screw_centres_found[screw_centres_found[:, 1].argsort()]
-    ground_truths = ground_truths[ground_truths[:, 1].argsort()]
+    # screw_centres_found = screw_centres_found[screw_centres_found[:, 1].argsort()]
+    # ground_truths = ground_truths[ground_truths[:, 1].argsort()]
 
     # call error function
-    false_pos_neg(screw_centres_found, ground_truths)
+    error = total_error(screw_centres_found, ground_truths)
+    print('total error:', error)
+    
