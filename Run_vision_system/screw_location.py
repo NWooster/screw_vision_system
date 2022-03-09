@@ -85,7 +85,7 @@ def pixel_screw_location(image_location='images_taken/1latest_image_from_camera'
     min_r = 18  # min pixel radius of screw
     max_r = 30  # max pixel radius of screw
     min_dist = int(min_r * 2)  # min distance between two screws
-    param1 = 100  # if low then more weak edges will be found so weak circles returned (default 60)
+    param1 = 60  # if low then more weak edges will be found so weak circles returned (default 60)
     param2 = 30  # if low then more circles will be returned by HoughCircles (default 30)
 
     # apply OpenCV HoughCircle algorithm
