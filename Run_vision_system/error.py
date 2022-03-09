@@ -13,8 +13,8 @@ import numpy as np
 import math
 
 # custom imports
-import calibrate_camera
 import screw_location
+import resize_to_fit_screen
 
 
 # function to return average error between two sets of points
@@ -25,7 +25,8 @@ def location_error(estimate, ground_truth):
 
     # if number of screws is not right
     if np.shape(estimate) != np.shape(ground_truth):
-        print("WARNING: Error in removing false positives and negatives as the number of screws found:", np.shape(estimate)[0],
+        print("WARNING: Error in removing false positives and negatives as the number of screws found:",
+              np.shape(estimate)[0],
               ", does not match the number of actual screws:", np.shape(ground_truth)[0])
     elif np.shape(estimate) == np.shape(ground_truth):
         pass
@@ -133,7 +134,7 @@ def total_error(estimate, ground_truth):
     # calculate total error from false neg, pos and location
     fpos_weight = 1
     fneg_weight = 1
-    e_total = e_loc + no_fp*fpos_weight + no_fn*fneg_weight
+    e_total = e_loc + no_fp * fpos_weight + no_fn * fneg_weight
 
     # print outputs
     print('There are', no_fp, 'screws falsely labelled,', no_fn, 'screws that were missed and',
@@ -141,6 +142,50 @@ def total_error(estimate, ground_truth):
     print('The location error of correctly found screws is:', e_loc, 'pixels.')
 
     return e_total
+
+
+def draw_error(estimate, ground_truth, image_location='images_taken/1latest_image_from_camera.jpg'):
+
+    # select centres only for pixel location estimates
+    screw_centres_found = estimate[:, :2]
+
+    # loads an image
+    image = cv.imread(cv.samples.findFile(image_location), cv.IMREAD_COLOR)
+
+    # output false pos and false neg locations
+    false_pos, false_neg = false_pos_neg(screw_centres_found, ground_truth)
+
+    # draw false positives (wrongly labelled screws) as yellow circle
+    false_pos_loc = np.delete(estimate, np.where(false_pos[:, 2] == 0)[0], 0)  # find false pos locations & radii
+    for i in range(np.shape(false_pos_loc)[0]):
+        image = cv.circle(image, np.uint16(false_pos_loc[i, (0, 1)]), radius=np.uint16(false_pos_loc[i, 2]),
+                          color=(0, 255, 255), thickness=4)
+
+    # draw false negatives (missed screws) as red circle
+    false_neg_loc = np.delete(false_neg, np.where(false_neg[:, 2] == 0)[0], 0)  # find false neg locations
+    for i in range(np.shape(false_neg_loc)[0]):
+        image = cv.circle(image, np.uint16(false_neg_loc[i, (0, 1)]), radius=23,
+                          color=(0, 0, 255), thickness=4)
+
+    # draw correctly found estimates as pink circle
+    correct_found_loc = np.delete(estimate, np.where(false_pos[:, 2] == 1)[0], 0)  # find locations & radii
+    for i in range(np.shape(correct_found_loc)[0]):
+        image = cv.circle(image, np.uint16(correct_found_loc[i, (0, 1)]), radius=np.uint16(correct_found_loc[i, 2]),
+                          color=(255, 0, 255), thickness=3)
+
+    # draw correctly found ground truths as blue dot
+    found_gt_loc = false_neg
+    for i in range(np.shape(found_gt_loc)[0]):
+        image = cv.circle(image, np.uint16(found_gt_loc[i, (0, 1)]), radius=7,
+                          color=(0, 255, 0), thickness=-1)
+
+    # resize and show image
+    resized_image = resize_to_fit_screen.resize(image, 1000)
+    cv.imshow("screw error", resized_image)
+
+    cv.waitKey(0)  # wait till user exits or presses q
+
+    return
 
 
 # function to return distance between 2 points
@@ -164,7 +209,9 @@ if __name__ == "__main__":
     # screw_centres_found = screw_centres_found[screw_centres_found[:, 1].argsort()]
     # ground_truths = ground_truths[ground_truths[:, 1].argsort()]
 
-    # call error function
+    # call error function (calculates number of false pos, neg and location error of correctly found screws
     error = total_error(screw_centres_found, ground_truths)
     print('total error:', error)
-    
+
+    # draw the error visually
+    draw_error(pix_screw_locations, ground_truths)
