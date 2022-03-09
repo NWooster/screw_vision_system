@@ -12,7 +12,7 @@ import cv2 as cv
 import time
 
 
-def take_picture(camera, autofocus_time=4):
+def take_picture(camera, autofocus_time=5):
     """
     Take picture function including time to autofocus camera.
     External camera = 1 and laptop camera = 0.
