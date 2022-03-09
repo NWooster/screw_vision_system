@@ -210,17 +210,11 @@ if __name__ == "__main__":
     pix_screw_locations = screw_location.pixel_screw_location(image_location='images_taken/'
                                                                              '1latest_image_from_camera.jpg')
 
-    # select centres only for pixel location estimates
-    screw_centres_found = pix_screw_locations[:, :2]
-
     # open ground truth .txt file
     ground_truths = np.loadtxt("combined_screw_ground_truths.txt", delimiter=",")
 
-    # re-order based on y coordinate (doesn't actually matter)
-    # screw_centres_found = screw_centres_found[screw_centres_found[:, 1].argsort()]
-    # ground_truths = ground_truths[ground_truths[:, 1].argsort()]
-
     # call error function (calculates number of false pos, neg and location error of correctly found screws
+    screw_centres_found = pix_screw_locations[:, :2]  # select centres only for pixel location estimates
     error = total_error(screw_centres_found, ground_truths)
     print('total error:', error)
 
