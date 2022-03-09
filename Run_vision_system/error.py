@@ -19,6 +19,10 @@ import screw_location
 
 # function to return average error between two sets of points
 def location_error(estimate, ground_truth):
+    """
+    Function works out pixel location error between 2 sets of points.
+    """
+
     # if number of screws is not right
     if np.shape(estimate) != np.shape(ground_truth):
         print("WARNING: The number of screws found:", np.shape(estimate)[0],
@@ -58,7 +62,6 @@ def false_pos_neg(estimate, ground_truth):
     Function returns:
      - an array of the estimates with flag 1 if they are false positives (wrongly circled).
      - an array of the ground truths with flag 1 if they are false negatives (not found).
-
     """
 
     # if number of screws is not right
@@ -108,7 +111,7 @@ def false_pos_neg(estimate, ground_truth):
 
     print('There are', no_fp, 'screws labelled as screws that are false and', no_fn, 'screws that were missed')
 
-    return estimate_flag
+    return estimate_flag, ground_truth_flag
 
 
 # function to return distance between 2 points
