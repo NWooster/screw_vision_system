@@ -97,6 +97,37 @@ def pixel_screw_location(image_location='images_taken/1latest_image_from_camera'
     screw_locations = np.array(circles)
     screw_locations = np.squeeze(screw_locations, axis=0)  # remove redundant dimension
 
+    # flag to run optimise parts
+    optimised = 1
+
+    blue_thresh = 50
+    green_thresh = 50
+    red_thresh = 50
+
+    if optimised == 1:
+
+        # add column to show think it is false positive
+        z1 = np.zeros((np.shape(screw_locations)[0], 1))
+        screw_locations = np.concatenate((screw_locations, z1), axis=1)
+
+        # flag false pos by checking colour
+        for i in range(np.shape(screw_locations)[0]):
+            pix_check_x = int(screw_locations[(i, 0)])  # grab x coord
+            pix_check_y = int(screw_locations[(i, 1)])  # grab y coord
+
+            # find colours
+            blue = initial_image[pix_check_y, pix_check_x, 0]
+            green = initial_image[pix_check_y, pix_check_x, 1]
+            red = initial_image[pix_check_y, pix_check_x, 2]
+
+            # change flag
+            if blue < blue_thresh and green < green_thresh and red < red_thresh:
+                screw_locations[i, 3] = 1
+
+        # remove all flagged presumed false positives and remove added flag column
+        screw_locations = np.delete(screw_locations, np.where(screw_locations[:, 3] == 1)[0], 0)
+        screw_locations = np.delete(screw_locations, np.s_[-1:], axis=1)
+
     # initialise final image
     final_image = initial_image
 
