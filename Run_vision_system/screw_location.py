@@ -98,7 +98,7 @@ def pixel_screw_location(dp=1, param1=60, param2=30, image_location='images_take
     screw_locations = np.squeeze(screw_locations, axis=0)  # remove redundant dimension
 
     # flag to run optimise parts
-    optimised = 1
+    optimised = 0
 
     blue_thresh = 50
     green_thresh = 50
