@@ -25,9 +25,10 @@ def location_error(estimate, ground_truth):
 
     # if number of screws is not right
     if np.shape(estimate) != np.shape(ground_truth):
-        print("WARNING: Error in removing false positives and negatives as the number of screws found:",
-              np.shape(estimate)[0],
-              ", does not match the number of actual screws:", np.shape(ground_truth)[0])
+        # print("WARNING: Error in removing false positives and negatives as the number of screws found:",
+        # np.shape(estimate)[0],
+        # ", does not match the number of actual screws:", np.shape(ground_truth)[0])
+        not_important = 1
     elif np.shape(estimate) == np.shape(ground_truth):
         pass
 
@@ -41,8 +42,11 @@ def location_error(estimate, ground_truth):
             if current_dist < small_dist[i]:
                 small_dist[i] = current_dist
 
-    # calc mean error
-    e = sum(small_dist) / np.shape(estimate)[0]
+    # calc mean error (catch divide by 0 error)
+    if np.shape(estimate)[0] == 0:
+        e = math.inf
+    else:
+        e = sum(small_dist) / np.shape(estimate)[0]
 
     # print('mean error:', e, 'max error:', max(small_dist), 'min error:', min(small_dist))
 
@@ -106,11 +110,13 @@ def total_error(estimate, ground_truth):
 
     # if number of screws is not right
     if np.shape(estimate) != np.shape(ground_truth):
-        print("The number of screws found:", np.shape(estimate)[0],
-              ", does not match the number of actual screws:", np.shape(ground_truth)[0])
+        # print("The number of screws found:", np.shape(estimate)[0],
+        #      ", does not match the number of actual screws:", np.shape(ground_truth)[0])
+        not_important = 1
     elif np.shape(estimate) == np.shape(ground_truth):
-        print("The number of screws found:", np.shape(estimate)[0],
-              ", does match the number of actual screws:", np.shape(ground_truth)[0])
+        # print("The number of screws found:", np.shape(estimate)[0],
+        #      ", does match the number of actual screws:", np.shape(ground_truth)[0])
+        not_important = 1
 
     false_pos, false_neg = false_pos_neg(estimate, ground_truth)
 
@@ -122,7 +128,8 @@ def total_error(estimate, ground_truth):
     # error check
     if np.shape(estimate)[0] - np.shape(ground_truth)[0] != no_fp - no_fn:
         # number of false pos - false neg should equal difference in estimated and actual screw count
-        print('PROBLEM WITH ERROR CALCULATION')
+        # print('PROBLEM WITH ERROR CALCULATION')
+        not_important = 1
 
     # remove false pos and false neg from list
     correct_estimates = np.delete(false_pos, np.where(false_pos[:, 2] == 1)[0], 0)
@@ -136,12 +143,7 @@ def total_error(estimate, ground_truth):
     fneg_weight = 1
     e_total = e_loc + no_fp * fpos_weight + no_fn * fneg_weight
 
-    # print outputs
-    print('There are', no_fp, 'screws falsely labelled,', no_fn, 'screws that were missed and',
-          no_correct, 'correctly found.')
-    print('The location error of correctly found screws is:', e_loc, 'pixels.')
-
-    return e_total
+    return no_fp, no_fn, no_correct, e_loc, e_total
 
 
 def draw_error(estimate, ground_truth, image_location='images_taken/1latest_image_from_camera.jpg'):
@@ -215,8 +217,14 @@ if __name__ == "__main__":
 
     # call error function (calculates number of false pos, neg and location error of correctly found screws
     screw_centres_found = pix_screw_locations[:, :2]  # select centres only for pixel location estimates
-    error = total_error(screw_centres_found, ground_truths)
-    print('total error:', error)
+    no_fp, no_fn, no_correct, e_loc, e_total = total_error(screw_centres_found, ground_truths)
+
+    # print outputs
+    print('There are', no_fp, 'screws falsely labelled,', no_fn, 'screws that were missed and',
+          no_correct, 'correctly found.')
+    print('The location error of correctly found screws is:', e_loc, 'pixels.')
+    print('')
+    print('total error:', e_total)
 
     # draw the error visually
     draw_error(pix_screw_locations, ground_truths)
