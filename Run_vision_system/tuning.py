@@ -12,7 +12,8 @@ import math
 import cv2 as cv
 import numpy as np
 import random
-import matplotlib as plt
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 # custom imports
 import screw_location
@@ -38,6 +39,8 @@ def tune(iterations=100):
     red_t_high = 150
 
     # initialise values:
+    # error array
+    error_array = []
     # returned values from error function
     f_error = math.inf
     no_fp = math.inf
@@ -45,6 +48,9 @@ def tune(iterations=100):
     no_correct = 0
     e_loc = math.inf
     # final optimised values
+    f_dp = dp_low
+    f_param1 = param1_low
+    f_param2 = param1_low
     f_fp = no_fp
     f_fn = no_fn
     f_correct = no_correct
@@ -87,15 +93,25 @@ def tune(iterations=100):
             f_e_loc = e_loc
 
         # store past errors to plot
-        error_array.append(e_total)
+        error_array.append(f_error)
+        print(i, 'completed')
 
     print('There are', f_fp, 'screws falsely labelled,', f_fn, 'screws that were missed and',
           f_correct, 'correctly found.')
     print('The location error of correctly found screws is:', f_e_loc, 'pixels.')
     print('')
     print('final error:', f_error)
+    print('')
+    print('optimised parameters: dp =', f_dp, '  param1 =', f_param1, '  param 2=', f_param2)
 
+    # plot iterations vs error
+    itera = np.arange(1, iterations+1)
+    sns.set()
+    plt.plot(itera, error_array)
+    plt.xlabel('Iteration')
+    plt.ylabel('Error')
+    plt.show()
 
 
 if __name__ == "__main__":
-    tune(iterations=100)
+    tune(iterations=10)
