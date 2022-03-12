@@ -8,9 +8,11 @@ Python script to automatically tune screw location parameters.
 
 """
 
+import math
 import cv2 as cv
 import numpy as np
 import random
+import matplotlib as plt
 
 # custom imports
 import screw_location
@@ -35,6 +37,19 @@ def tune(iterations=100):
     red_t_low = 0
     red_t_high = 150
 
+    # initialise values:
+    # returned values from error function
+    f_error = math.inf
+    no_fp = math.inf
+    no_fn = math.inf
+    no_correct = 0
+    e_loc = math.inf
+    # final optimised values
+    f_fp = no_fp
+    f_fn = no_fn
+    f_correct = no_correct
+    f_e_loc = e_loc
+
     for i in range(iterations):
         # make parameters random number in given range
         dp = round(random.uniform(dp_low, dp_high), 2)
@@ -48,15 +63,39 @@ def tune(iterations=100):
         pix_screw_locations = screw_location.pixel_screw_location(dp, param1, param2, image_location='images_taken/'
                                                                                                      '1latest_image_'
                                                                                                      'from_camera.jpg')
-        print(dp, param1, param2)
 
+        # check some screws exist
+        if not pix_screw_locations.any():
+            e_total = math.inf
         # find error
-        screw_centres_found = pix_screw_locations[:, :2]  # select centres only for pixel location estimates
-        e_t = error.total_error(screw_centres_found, ground_truths)
-        print('total error:', e_t)
+        else:
+            screw_centres_found = pix_screw_locations[:, :2]  # select centres only for pixel location estimates
+            no_fp, no_fn, no_correct, e_loc, e_total = error.total_error(screw_centres_found, ground_truths)
 
         # if error is less than previous save values
+        if e_total < f_error:
+            f_dp = dp
+            f_param1 = param1
+            f_param2 = param2
+            f_blue = blue_t
+            f_green = green_t
+            f_red = red_t
+            f_error = e_total
+            f_fp = no_fp
+            f_fn = no_fn
+            f_correct = no_correct
+            f_e_loc = e_loc
+
+        # store past errors to plot
+        error_array.append(e_total)
+
+    print('There are', f_fp, 'screws falsely labelled,', f_fn, 'screws that were missed and',
+          f_correct, 'correctly found.')
+    print('The location error of correctly found screws is:', f_e_loc, 'pixels.')
+    print('')
+    print('final error:', f_error)
+
 
 
 if __name__ == "__main__":
-    tune(iterations=5)
+    tune(iterations=100)
