@@ -36,7 +36,8 @@ def mm_screw_location(pix_to_mm, origin_pix, ratio_error, image_location='images
 
 
 # loads image, pre-process it, apply hough circle detection
-def pixel_screw_location(dp=1, param1=60, param2=30, image_location='images_taken/1latest_image_from_camera'):
+def pixel_screw_location(dp=1, param1=60, param2=30, blue_t=50, green_t=50, red_t=50,
+                         image_location='images_taken/1latest_image_from_camera'):
     """
     Screw location function for pixel coordinates.
     """
@@ -98,13 +99,14 @@ def pixel_screw_location(dp=1, param1=60, param2=30, image_location='images_take
     screw_locations = np.squeeze(screw_locations, axis=0)  # remove redundant dimension
 
     # flag to run optimise parts
-    optimised = 0
+    optimised = 1
 
-    blue_thresh = 50
-    green_thresh = 50
-    red_thresh = 50
+    blue_thresh = blue_t
+    green_thresh = green_t
+    red_thresh = red_t
 
-    if optimised == 1:
+    # check if wanting to colour optimise and screw array is not empty
+    if optimised == 1 and screw_locations.size != 1:
 
         # add column to show think it is false positive
         z1 = np.zeros((np.shape(screw_locations)[0], 1))
