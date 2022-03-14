@@ -24,20 +24,6 @@ def tune(iterations=100):
     # open ground truth .txt file
     ground_truths = np.loadtxt("combined_screw_ground_truths.txt", delimiter=",")
 
-    # parameter ranges
-    dp_low = 0.01
-    dp_high = 2
-    param1_low = 20
-    param1_high = 150
-    param2_low = 10
-    param2_high = 100
-    blue_t_low = 0
-    blue_t_high = 150
-    green_t_low = 0
-    green_t_high = 150
-    red_t_low = 0
-    red_t_high = 150
-
     # initialise values:
     # error array
     error_array = []
@@ -48,15 +34,50 @@ def tune(iterations=100):
     no_correct = 0
     e_loc = math.inf
     # final optimised values
-    f_dp = dp_low
-    f_param1 = param1_low
-    f_param2 = param1_low
+    f_dp = 0
+    f_param1 = 0
+    f_param2 = 0
     f_fp = no_fp
     f_fn = no_fn
     f_correct = no_correct
     f_e_loc = e_loc
+    f_blue = 0
+    f_green = 0
+    f_red = 0
 
     for i in range(iterations):
+
+        # refine parameter ranges based off iteration number
+        if i < iterations/2:
+            # parameter ranges
+            dp_low = 0.01
+            dp_high = 2.5
+            param1_low = 10
+            param1_high = 140
+            param2_low = 10
+            param2_high = 120
+            blue_t_low = 0
+            blue_t_high = 255
+            green_t_low = 0
+            green_t_high = 255
+            red_t_low = 0
+            red_t_high = 255
+        else:
+            # refined parameter ranges
+            range_mult = 0.25  # % change from current final parameter (range will be double this x current value)
+            dp_low = round(f_dp - f_dp*range_mult, 2)
+            dp_high = round(f_dp + f_dp*range_mult, 2)
+            param1_low = round(f_param1 - f_param1*range_mult)
+            param1_high = round(f_param1 + f_param1*range_mult)
+            param2_low = round(f_param2 - f_param2*range_mult)
+            param2_high = round(f_param2 + f_param2*range_mult)
+            blue_t_low = round(f_blue - f_blue*range_mult)
+            blue_t_high = round(f_blue + f_blue*range_mult)
+            green_t_low = round(f_green - f_green*range_mult)
+            green_t_high = round(f_green + f_green*range_mult)
+            red_t_low = round(f_red - f_red*range_mult)
+            red_t_high = round(f_red + f_red*range_mult)
+
         # make parameters random number in given range
         dp = round(random.uniform(dp_low, dp_high), 2)
         param1 = random.randint(param1_low, param1_high)
@@ -94,7 +115,7 @@ def tune(iterations=100):
 
         # store past errors to plot
         error_array.append(f_error)
-        print(i, 'completed')
+        print(i, 'iterations completed')
 
     print('There are', f_fp, 'screws falsely labelled,', f_fn, 'screws that were missed and',
           f_correct, 'correctly found.')
@@ -114,4 +135,4 @@ def tune(iterations=100):
 
 
 if __name__ == "__main__":
-    tune(iterations=10)
+    tune(iterations=2000)
