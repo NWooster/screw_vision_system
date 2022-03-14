@@ -87,9 +87,9 @@ def tune(iterations=100):
         red_t = random.randint(red_t_low, red_t_high)
 
         # find pixel screw location
-        pix_screw_locations = screw_location.pixel_screw_location(dp, param1, param2, image_location='images_taken/'
-                                                                                                     '1latest_image_'
-                                                                                                     'from_camera.jpg')
+        pix_screw_locations = screw_location.pixel_screw_location(dp, param1, param2, blue_t, green_t, red_t,
+                                                                  image_location='images_taken/'
+                                                                                 '1latest_image_from_camera.jpg')
 
         # check some screws exist
         if not pix_screw_locations.any():
@@ -123,7 +123,8 @@ def tune(iterations=100):
     print('')
     print('final error:', f_error)
     print('')
-    print('optimised parameters: dp =', f_dp, '  param1 =', f_param1, '  param 2=', f_param2)
+    print('optimised parameters: dp =', f_dp, '  param1 =', f_param1, '  param2=', f_param2,
+          ' blue=', f_blue, ' green=', f_green, ' red=', f_red)
 
     # plot iterations vs error
     itera = np.arange(1, iterations+1)
