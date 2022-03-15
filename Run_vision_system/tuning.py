@@ -9,7 +9,6 @@ Python script to automatically tune screw location parameters.
 """
 
 import math
-import cv2 as cv
 import numpy as np
 import random
 import matplotlib.pyplot as plt
@@ -136,4 +135,4 @@ def tune(iterations=100):
 
 
 if __name__ == "__main__":
-    tune(iterations=5000)
+    tune(iterations=50)
