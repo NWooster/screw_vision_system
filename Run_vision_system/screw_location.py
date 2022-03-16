@@ -32,6 +32,23 @@ def mm_screw_location(pix_to_mm, origin_pix, ratio_error, image_location='images
     # find max error in mm
     max_mm_error = np.amax(abs(mm_locations)) * ratio_error
 
+    # Generate image
+    image = cv.imread(cv.samples.findFile('images_processed/1screw_pixel_output.jpg'), cv.IMREAD_COLOR)
+    cv.circle(image, (int(origin_pix[0, 0]), int(origin_pix[0, 1])), 25, (0, 0, 0))  # draw circle at origin
+    font = cv.FONT_HERSHEY_SIMPLEX  # set font
+    # place origin text
+    cv.putText(image, '(0,0)', (int(origin_pix[0, 0]), int(origin_pix[0, 1])), font, 1, (0, 0, 255), 2)
+    # draw on mm location at each screw
+    mm_locations_rounded = mm_locations[:, :2]
+    for i in range(np.shape(pix_locations)[0]):
+        mm_locations_rounded[i, 0] = round(mm_locations_rounded[i, 0], 2)
+        mm_locations_rounded[i, 1] = round(mm_locations_rounded[i, 1], 2)
+        cv.putText(image, str(mm_locations_rounded[i]), (int(pix_locations[i, 0]), int(pix_locations[i, 1])), font, 1, (0, 255, 255), 2)
+
+
+    # save image
+    cv.imwrite('images_processed/1screw_mm_output' + '.jpg', image)
+
     return mm_locations, max_mm_error
 
 
@@ -136,9 +153,9 @@ def pixel_screw_location(dp=1.79, param1=20, param2=72, blue_t=409, green_t=332,
     # draw the detected circles
     if circles is not None:
         # removes decimals
-        circles_draw = np.uint16(np.around(circles))
+        circles_draw = np.uint16(np.around(screw_locations))
         # print('circles drawn:', circles_draw)
-        for i in circles_draw[0, :]:
+        for i in circles_draw:
             center = (i[0], i[1])
             # circle center
             cv.circle(final_image, center, 1, (0, 100, 100), 3)
@@ -153,7 +170,7 @@ def pixel_screw_location(dp=1.79, param1=20, param2=72, blue_t=409, green_t=332,
     # cv.imshow("detected screws", resized_image)
 
     # save image as filename.jpeg
-    cv.imwrite('images_processed/1screw_output' + '.jpg', final_image)
+    cv.imwrite('images_processed/1screw_pixel_output' + '.jpg', final_image)
 
     return screw_locations
 
