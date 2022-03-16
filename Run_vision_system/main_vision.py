@@ -30,7 +30,8 @@ def main_vision(argv):
 
     # find pixel/mm ratio
     pix_to_mm, tl_corner_pix, ratio_error = calibrate_camera.calibrate_camera(image_location='images_taken/'
-                                                                                             '1latest_image_from_camera.jpg')
+                                                                                             '1latest_image_from_'
+                                                                                             'camera.jpg')
 
     # output screw locations in mm
     screw_locations, max_mm_error = screw_location.mm_screw_location(pix_to_mm, tl_corner_pix, ratio_error,
