@@ -64,7 +64,7 @@ def calibrate_camera(image_location='images_taken/1latest_image_from_camera', co
         # sometimes changes so just edit name based off colour
         br_corner = corner_location[columns * rows - rows, :]  # extract top left corner
         br_corner_rnd = np.rint(br_corner)  # round pixel float to nearest integer
-        cv.circle(img, (int(br_corner_rnd[0]), int(br_corner_rnd[1])), 50, (0, 0, 0))  # draw circle at location
+        cv.circle(img, (int(br_corner_rnd[0]), int(br_corner_rnd[1])), 50, (0, 255, 0))  # draw circle at location
 
         bl_corner = corner_location[0, :]  # extract top right corner
         bl_corner_rnd = np.rint(bl_corner)  # round pixel float to nearest integer
@@ -72,7 +72,7 @@ def calibrate_camera(image_location='images_taken/1latest_image_from_camera', co
 
         tl_corner = corner_location[columns - 1, :]  # extract bottom right corner
         tl_corner_rnd = np.rint(tl_corner)  # round pixel float to nearest integer
-        cv.circle(img, (int(tl_corner_rnd[0]), int(tl_corner_rnd[1])), 50, (0, 255, 0))  # draw circle at location
+        cv.circle(img, (int(tl_corner_rnd[0]), int(tl_corner_rnd[1])), 50, (0, 0, 0))  # draw circle at location
 
         tr_corner = corner_location[columns * rows - 1, :]  # extract bottom left corner
         tr_corner_rnd = np.rint(tr_corner)  # round pixel float to nearest integer
