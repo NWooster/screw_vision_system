@@ -61,22 +61,22 @@ def calibrate_camera(image_location='images_taken/1latest_image_from_camera', co
         # print('image size x:', pixel_size[1], 'y:', pixel_size[0])  # longer x creates rectangle
 
         # select 4 corners (B,G,R)
-        # tl
-        tl_corner = corner_location[columns * rows - rows, :]  # extract top left corner
-        tl_corner_rnd = np.rint(tl_corner)  # round pixel float to nearest integer
-        cv.circle(img, (int(tl_corner_rnd[0]), int(tl_corner_rnd[1])), 50, (255, 0, 0))  # draw circle at location
-        # tr
-        tr_corner = corner_location[0, :]  # extract top right corner
-        tr_corner_rnd = np.rint(tr_corner)  # round pixel float to nearest integer
-        cv.circle(img, (int(tr_corner_rnd[0]), int(tr_corner_rnd[1])), 50, (0, 0, 255))  # draw circle at location
-        # br
-        br_corner = corner_location[columns - 1, :]  # extract bottom right corner
+        # sometimes changes so just edit name based off colour
+        br_corner = corner_location[columns * rows - rows, :]  # extract top left corner
         br_corner_rnd = np.rint(br_corner)  # round pixel float to nearest integer
-        cv.circle(img, (int(br_corner_rnd[0]), int(br_corner_rnd[1])), 50, (0, 255, 0))  # draw circle at location
-        # bl
-        bl_corner = corner_location[columns * rows - 1, :]  # extract bottom left corner
+        cv.circle(img, (int(br_corner_rnd[0]), int(br_corner_rnd[1])), 50, (0, 0, 0))  # draw circle at location
+
+        bl_corner = corner_location[0, :]  # extract top right corner
         bl_corner_rnd = np.rint(bl_corner)  # round pixel float to nearest integer
-        cv.circle(img, (int(bl_corner_rnd[0]), int(bl_corner_rnd[1])), 50, (255, 255, 0))  # draw circle at location
+        cv.circle(img, (int(bl_corner_rnd[0]), int(bl_corner_rnd[1])), 50, (0, 0, 255))  # draw circle at location
+
+        tl_corner = corner_location[columns - 1, :]  # extract bottom right corner
+        tl_corner_rnd = np.rint(tl_corner)  # round pixel float to nearest integer
+        cv.circle(img, (int(tl_corner_rnd[0]), int(tl_corner_rnd[1])), 50, (0, 255, 0))  # draw circle at location
+
+        tr_corner = corner_location[columns * rows - 1, :]  # extract bottom left corner
+        tr_corner_rnd = np.rint(tr_corner)  # round pixel float to nearest integer
+        cv.circle(img, (int(tr_corner_rnd[0]), int(tr_corner_rnd[1])), 50, (255, 0, 0))  # draw circle at location
 
         # calc pixel distance between corners
         pix_width1 = distance(tl_corner_rnd[0], tl_corner_rnd[1], tr_corner_rnd[0], tr_corner_rnd[1])  # top side
