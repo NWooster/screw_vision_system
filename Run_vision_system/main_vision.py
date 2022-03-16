@@ -37,7 +37,6 @@ def main_vision(argv):
     screw_locations, max_mm_error = screw_location.mm_screw_location(pix_to_mm, tl_corner_pix, ratio_error,
                                                                      image_location='images_taken/'
                                                                                     '1latest_image_from_camera.jpg')
-
     # select centres only
     screw_centres = screw_locations[:, :2]
 
