@@ -41,22 +41,21 @@ def main_vision(argv):
     # select centres only
     screw_centres = screw_locations[:, :2]
 
-    # print outputs
-
+    # Print outputs
     # print('screw locations:', screw_locations)
     # print()
-
     # screw_radii = screw_locations[:, 2]
     # print('screw radii:', screw_radii)
     # print()
-
     # print('screw centres:', screw_centres)
     # print()
-
     # print('number of screws found: ', np.shape(screw_locations)[0])
     # print()
 
-    print('max error is: ' + str(max_mm_error) + 'mm')
+    # Results
+    print('Resolution is ' + str(pix_to_mm) + 'mm (1 pixel is ' + str(pix_to_mm) + 'mm)')  # resolution
+
+    print('max error due to mm to pixel conversion error is: ' + str(max_mm_error) + 'mm')
     print()
     print('------------------------------')
 
