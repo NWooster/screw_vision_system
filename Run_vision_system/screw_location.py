@@ -12,7 +12,7 @@ import cv2 as cv
 import numpy as np
 
 
-def mm_screw_location(pix_to_mm, origin_pix, ratio_error, image_location='images_taken/1latest_image_from_camera'):
+def mm_screw_location(pix_to_mm, origin_pix, ratio_error, image_location='images_taken/1latest_image_from_camera.jpg'):
     """
     Screw location function for mm coordinates.
     Calculates it from a given origin (normally top left corner of chessboard is specified).
@@ -38,11 +38,24 @@ def mm_screw_location(pix_to_mm, origin_pix, ratio_error, image_location='images
     font = cv.FONT_HERSHEY_SIMPLEX  # set font
     # place origin text
     cv.putText(image, '(0,0)', (int(origin_pix[0, 0]), int(origin_pix[0, 1])), font, 1, (0, 0, 255), 2)
-    # draw on mm location at each screw
-    mm_locations_rounded = mm_locations[:, :2]  # ignore radius
+    # draw on mm and pixel location at each screw
+    pix_loc_from_origin_rounded = pix_loc_from_origin[:, :3]
+    mm_locations_rounded = mm_locations[:, :3]
+    pix_loc_from_origin_rounded = np.round(pix_loc_from_origin_rounded, 1)  # round to 1 decimal place
     mm_locations_rounded = np.round(mm_locations_rounded, 1)  # round to 1 decimal place
     for i in range(np.shape(pix_locations)[0]):
-        cv.putText(image, str(mm_locations_rounded[i]), (int(pix_locations[i, 0]), int(pix_locations[i, 1])), font, 0.7, (0, 255, 255), 2)
+        cv.putText(image, str(pix_loc_from_origin_rounded[i]), (int(pix_locations[i, 0]), int(pix_locations[i, 1])-10),
+                   font, 0.7, (255, 255, 255), 2)
+        cv.putText(image, str(mm_locations_rounded[i]), (int(pix_locations[i, 0]), int(pix_locations[i, 1])+15),
+                   font, 0.7, (0, 0, 0), 2)
+
+    # color key
+    cv.putText(image, text="KEY", org=(1800, 1450), fontFace=cv.FONT_HERSHEY_DUPLEX,
+               fontScale=2, color=(0, 0, 0), thickness=3)
+    cv.putText(image, text="[X, y, r] in pixels from origin", org=(1800, 1500), fontFace=cv.FONT_HERSHEY_DUPLEX,
+               fontScale=1.5, color=(255, 255, 255), thickness=2)
+    cv.putText(image, text="[X, y, r] in mm from origin", org=(1800, 1550), fontFace=cv.FONT_HERSHEY_DUPLEX,
+               fontScale=1.5, color=(0, 0, 0), thickness=2)
 
     # save image
     cv.imwrite('images_processed/1screw_mm_output' + '.jpg', image)
@@ -182,4 +195,5 @@ def pixel_screw_location(dp=1.49, param1=17, param2=47, blue_t=107, green_t=362,
 
 
 if __name__ == "__main__":
-    mm_screw_location()
+    mm_screw_location(pix_to_mm=0.06840769050033296, origin_pix=np.array([343.71344, 1510.1456]),
+                      ratio_error=0.00010089773771800037)
