@@ -45,7 +45,6 @@ def mm_screw_location(pix_to_mm, origin_pix, ratio_error, image_location='images
         mm_locations_rounded[i, 1] = round(mm_locations_rounded[i, 1], 2)
         cv.putText(image, str(mm_locations_rounded[i]), (int(pix_locations[i, 0]), int(pix_locations[i, 1])), font, 1, (0, 255, 255), 2)
 
-
     # save image
     cv.imwrite('images_processed/1screw_mm_output' + '.jpg', image)
 
@@ -53,7 +52,7 @@ def mm_screw_location(pix_to_mm, origin_pix, ratio_error, image_location='images
 
 
 # loads image, pre-process it, apply hough circle detection
-def pixel_screw_location(dp=1.79, param1=20, param2=72, blue_t=409, green_t=332, red_t=95,
+def pixel_screw_location(dp=1.49, param1=17, param2=47, blue_t=107, green_t=362, red_t=58,
                          image_location='images_taken/1latest_image_from_camera'):
     """
     Screw location function for pixel coordinates.
@@ -140,7 +139,7 @@ def pixel_screw_location(dp=1.79, param1=20, param2=72, blue_t=409, green_t=332,
                 print('ERROR IN Y PIXEL LOCATION')
             if pix_check_x > 2591:
                 print('ERROR IN X PIXEL LOCATION')
-                pix_check_y = 2591
+                pix_check_x = 2591
 
             # find colours
             blue = initial_image[pix_check_y, pix_check_x, 0]
