@@ -39,11 +39,10 @@ def mm_screw_location(pix_to_mm, origin_pix, ratio_error, image_location='images
     # place origin text
     cv.putText(image, '(0,0)', (int(origin_pix[0, 0]), int(origin_pix[0, 1])), font, 1, (0, 0, 255), 2)
     # draw on mm location at each screw
-    mm_locations_rounded = mm_locations[:, :2]
+    mm_locations_rounded = mm_locations[:, :2]  # ignore radius
+    mm_locations_rounded = np.round(mm_locations_rounded, 1)  # round to 1 decimal place
     for i in range(np.shape(pix_locations)[0]):
-        mm_locations_rounded[i, 0] = round(mm_locations_rounded[i, 0], 2)
-        mm_locations_rounded[i, 1] = round(mm_locations_rounded[i, 1], 2)
-        cv.putText(image, str(mm_locations_rounded[i]), (int(pix_locations[i, 0]), int(pix_locations[i, 1])), font, 1, (0, 255, 255), 2)
+        cv.putText(image, str(mm_locations_rounded[i]), (int(pix_locations[i, 0]), int(pix_locations[i, 1])), font, 0.7, (0, 255, 255), 2)
 
     # save image
     cv.imwrite('images_processed/1screw_mm_output' + '.jpg', image)
