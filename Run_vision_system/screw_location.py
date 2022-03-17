@@ -47,7 +47,7 @@ def mm_screw_location(pix_to_mm, origin_pix, ratio_error, image_location='images
         cv.putText(image, str(pix_loc_from_origin_rounded[i]), (int(pix_locations[i, 0]), int(pix_locations[i, 1])-10),
                    font, 0.7, (255, 255, 255), 2)
         cv.putText(image, str(mm_locations_rounded[i]), (int(pix_locations[i, 0]), int(pix_locations[i, 1])+15),
-                   font, 0.7, (0, 0, 0), 2)
+                   font, 0.7, (0, 0, 255), 2)
 
     # color key
     cv.putText(image, text="KEY", org=(1800, 1450), fontFace=cv.FONT_HERSHEY_DUPLEX,
@@ -55,7 +55,7 @@ def mm_screw_location(pix_to_mm, origin_pix, ratio_error, image_location='images
     cv.putText(image, text="[X, y, r] in pixels from origin", org=(1800, 1500), fontFace=cv.FONT_HERSHEY_DUPLEX,
                fontScale=1.5, color=(255, 255, 255), thickness=2)
     cv.putText(image, text="[X, y, r] in mm from origin", org=(1800, 1550), fontFace=cv.FONT_HERSHEY_DUPLEX,
-               fontScale=1.5, color=(0, 0, 0), thickness=2)
+               fontScale=1.5, color=(0, 0, 255 ), thickness=2)
 
     # save image
     cv.imwrite('images_processed/1screw_mm_output' + '.jpg', image)
@@ -195,5 +195,8 @@ def pixel_screw_location(dp=1.49, param1=17, param2=47, blue_t=107, green_t=362,
 
 
 if __name__ == "__main__":
-    mm_screw_location(pix_to_mm=0.06840769050033296, origin_pix=np.array([343.71344, 1510.1456]),
+    # test with different mm ratios (normally get from calibrate camera)
+    mm_ratio = 0.0579  # (from notes calc)
+    #mm_ratio = 0.05765  # (from average of 3 screws notes calc)
+    mm_screw_location(pix_to_mm=mm_ratio, origin_pix=np.array([343.71344, 1510.1456]),
                       ratio_error=0.00010089773771800037)
