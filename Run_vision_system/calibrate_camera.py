@@ -135,5 +135,5 @@ def distance(x1, y1, x2, y2):
 
 
 if __name__ == "__main__":
-    output = calibrate_camera(image_location='images_taken/with_25white_square.jpg')
+    output = calibrate_camera(image_location='images_taken/1latest_image_from_camera.jpg')
     print(output)
