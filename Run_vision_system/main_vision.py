@@ -26,7 +26,7 @@ def main_vision(argv):
     webcam = 1
     laptop_cam = 0
 
-    #take_picture.take_picture(webcam, 10)  # take image from webcam (camera 1) with specified autofocus time
+    take_picture.take_picture(webcam, 10)  # take image from webcam (camera 1) with specified autofocus time
 
     # find pixel/mm ratio
     pix_to_mm, tl_corner_pix, ratio_error = calibrate_camera.calibrate_camera(image_location='images_taken/'
