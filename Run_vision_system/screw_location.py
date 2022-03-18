@@ -10,6 +10,7 @@ Python script to work out screw locations.
 
 import cv2 as cv
 import numpy as np
+import math
 
 
 def mm_screw_location(pix_to_mm, origin_pix, ratio_error, image_location='images_taken/1latest_image_from_camera.jpg'):
@@ -32,6 +33,15 @@ def mm_screw_location(pix_to_mm, origin_pix, ratio_error, image_location='images
     # find max error in mm
     max_mm_error = np.amax(abs(mm_locations)) * ratio_error
 
+    # find direct distance from origin in pixels and mm
+    direct_pix = np.zeros((np.shape(pix_locations)[0], 1))
+    direct_mm = np.zeros((np.shape(pix_locations)[0], 1))
+    for i in range(np.shape(pix_locations)[0]):
+        direct_pix[i] = distance(pix_locations[i, 0], pix_locations[i, 1], origin_pix[0, 0], origin_pix[0, 1])
+        direct_mm[i] = direct_pix[i]*pix_to_mm
+    direct_pix = np.round(direct_pix, 0)  # round to int
+    direct_mm = np.round(direct_mm, 2)  # round to 2 decimal place
+
     # Generate image
     image = cv.imread(cv.samples.findFile('images_processed/1screw_pixel_output.jpg'), cv.IMREAD_COLOR)
     cv.circle(image, (int(origin_pix[0, 0]), int(origin_pix[0, 1])), 25, (0, 0, 0))  # draw circle at origin
@@ -44,18 +54,29 @@ def mm_screw_location(pix_to_mm, origin_pix, ratio_error, image_location='images
     pix_loc_from_origin_rounded = np.round(pix_loc_from_origin_rounded, 1)  # round to 1 decimal place
     mm_locations_rounded = np.round(mm_locations_rounded, 1)  # round to 1 decimal place
     for i in range(np.shape(pix_locations)[0]):
-        cv.putText(image, str(pix_loc_from_origin_rounded[i]), (int(pix_locations[i, 0]), int(pix_locations[i, 1])-10),
-                   font, 0.7, (255, 255, 255), 2)
-        cv.putText(image, str(mm_locations_rounded[i]), (int(pix_locations[i, 0]), int(pix_locations[i, 1])+15),
+        #cv.putText(image, str(direct_pix[i]),
+                   #(int(pix_locations[i, 0]), int(pix_locations[i, 1]) - 50),
+                   #font, 0.7, (100, 0, 255), 2)
+        cv.putText(image, str(direct_mm[i]),
+                   (int(pix_locations[i, 0]), int(pix_locations[i, 1]) - 25),
+                   font, 0.7, (0, 255, 255), 2)
+        #cv.putText(image, str(pix_loc_from_origin_rounded[i]),
+                   #(int(pix_locations[i, 0]), int(pix_locations[i, 1]) - 10),
+                   #font, 0.7, (255, 255, 255), 2)
+        cv.putText(image, str(mm_locations_rounded[i]), (int(pix_locations[i, 0]), int(pix_locations[i, 1]) + 15),
                    font, 0.7, (0, 0, 255), 2)
 
     # color key
-    cv.putText(image, text="KEY", org=(1800, 1450), fontFace=cv.FONT_HERSHEY_DUPLEX,
+    cv.putText(image, text="KEY", org=(1600, 1450), fontFace=cv.FONT_HERSHEY_DUPLEX,
                fontScale=2, color=(0, 0, 0), thickness=3)
-    cv.putText(image, text="[X, y, r] in pixels from origin", org=(1800, 1500), fontFace=cv.FONT_HERSHEY_DUPLEX,
+    cv.putText(image, text="Direct distance in pixels from origin", org=(1600, 1500), fontFace=cv.FONT_HERSHEY_DUPLEX,
+               fontScale=1.5, color=(100, 0, 255), thickness=2)
+    cv.putText(image, text="Direct distance in mm from origin", org=(1600, 1550), fontFace=cv.FONT_HERSHEY_DUPLEX,
+               fontScale=1.5, color=(0, 255, 255), thickness=2)
+    cv.putText(image, text="[X, y, r] in pixels from origin", org=(1600, 1600), fontFace=cv.FONT_HERSHEY_DUPLEX,
                fontScale=1.5, color=(255, 255, 255), thickness=2)
-    cv.putText(image, text="[X, y, r] in mm from origin", org=(1800, 1550), fontFace=cv.FONT_HERSHEY_DUPLEX,
-               fontScale=1.5, color=(0, 0, 255 ), thickness=2)
+    cv.putText(image, text="[X, y, r] in mm from origin", org=(1600, 1650), fontFace=cv.FONT_HERSHEY_DUPLEX,
+               fontScale=1.5, color=(0, 0, 255), thickness=2)
 
     # save image
     cv.imwrite('images_processed/1screw_mm_output' + '.jpg', image)
@@ -194,9 +215,16 @@ def pixel_screw_location(dp=1.49, param1=17, param2=47, blue_t=107, green_t=362,
     return screw_locations
 
 
+# function to return distance between 2 points
+def distance(x1, y1, x2, y2):
+    dist = math.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2)
+    return dist
+
+
 if __name__ == "__main__":
     # test with different mm ratios (normally get from calibrate camera)
-    mm_ratio = 0.0579  # (from notes calc)
-    #mm_ratio = 0.05765  # (from average of 3 screws notes calc)
+    #mm_ratio = 0.0579  # (from notes calc)
+    # mm_ratio = 0.05765  # (from average of 3 screws notes calc)
+    mm_ratio = 0.07446754918921591  # from large rectangle cheq square
     mm_screw_location(pix_to_mm=mm_ratio, origin_pix=np.array([343.71344, 1510.1456]),
                       ratio_error=0.00010089773771800037)
