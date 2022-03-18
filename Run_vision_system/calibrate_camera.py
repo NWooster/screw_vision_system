@@ -14,7 +14,8 @@ import math
 from resize_to_fit_screen import resize
 
 
-def calibrate_camera(image_location='images_taken/1latest_image_from_camera', columns=7, rows=7, width=25, height=25):
+def calibrate_camera(image_location='images_taken/1latest_image_from_camera',
+                     columns=7, rows=7, width=25.0, height=25.0):
     """
         `columns` and `rows` are the number of INSIDE corners in the
         chessboard's columns and rows.
@@ -135,6 +136,6 @@ def distance(x1, y1, x2, y2):
 
 
 if __name__ == "__main__":
-    output = calibrate_camera(image_location='images_taken/1latest_image_from_camera', columns=7, rows=7, width=25,
-                              height=25)
+    output = calibrate_camera(image_location='images_taken/1latest_image_from_camera.jpg',
+                              columns=6, rows=6, width=93.5, height=93.5)
     print(output)
