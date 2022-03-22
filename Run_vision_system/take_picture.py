@@ -68,4 +68,4 @@ def take_picture(camera, autofocus_time=5):
 
 
 if __name__ == "__main__":
-    take_picture(1)
+    take_picture(1, autofocus_time=10)

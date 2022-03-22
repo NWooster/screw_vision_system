@@ -54,9 +54,9 @@ def mm_screw_location(pix_to_mm, origin_pix, ratio_error, image_location='images
     pix_loc_from_origin_rounded = np.round(pix_loc_from_origin_rounded, 1)  # round to 1 decimal place
     mm_locations_rounded = np.round(mm_locations_rounded, 1)  # round to 1 decimal place
     for i in range(np.shape(pix_locations)[0]):
-        #cv.putText(image, str(direct_pix[i]),
-                   #(int(pix_locations[i, 0]), int(pix_locations[i, 1]) - 50),
-                   #font, 0.7, (100, 0, 255), 2)
+        cv.putText(image, str(direct_pix[i]),
+                   (int(pix_locations[i, 0]), int(pix_locations[i, 1]) - 50),
+                   font, 0.7, (100, 0, 255), 2)
         cv.putText(image, str(direct_mm[i]),
                    (int(pix_locations[i, 0]), int(pix_locations[i, 1]) - 25),
                    font, 0.7, (0, 255, 255), 2)
@@ -224,7 +224,8 @@ def distance(x1, y1, x2, y2):
 if __name__ == "__main__":
     # test with different mm ratios (normally get from calibrate camera)
     #mm_ratio = 0.0579  # (from notes calc)
-    # mm_ratio = 0.05765  # (from average of 3 screws notes calc)
-    mm_ratio = 0.07446754918921591  # from large rectangle cheq square
+    #mm_ratio = 0.05765  # (from average of 3 screws notes calc)
+    #mm_ratio = 0.07446754918921591  # from large rectangle cheq square
+    mm_ratio = 0.05718463  # (from top right screw)
     mm_screw_location(pix_to_mm=mm_ratio, origin_pix=np.array([343.71344, 1510.1456]),
                       ratio_error=0.00010089773771800037)
