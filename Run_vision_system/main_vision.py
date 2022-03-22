@@ -26,7 +26,7 @@ def main_vision(argv):
     webcam = 1
     laptop_cam = 0
 
-    take_picture.take_picture(webcam, 10)  # take image from webcam (camera 1) with specified autofocus time
+    #take_picture.take_picture(webcam, 10)  # take image from webcam (camera 1) with specified autofocus time
 
     # find pixel/mm ratio
     pix_to_mm, tl_corner_pix, ratio_error = calibrate_camera.calibrate_camera(image_location='images_taken/'
@@ -76,3 +76,5 @@ if __name__ == "__main__":
     print()
     print('Add this coordinate to the constant (x,y) distance of gantry (0,0) to the INNER top left corner to get '
           'where to move gantry to in mm.')
+    array_to_add = np.array([43, 188, 0])
+    print(array_to_add)
