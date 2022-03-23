@@ -14,8 +14,8 @@ import math
 from resize_to_fit_screen import resize
 
 
-def calibrate_camera(image_location='images_taken/1latest_image_from_camera',
-                     columns=7, rows=7, width=25.0, height=25.0):
+def calibrate_camera(image_location='images_taken/1latest_image_from_camera', mm_dist=111,
+                     columns=7, rows=7):
     """
         `columns` and `rows` are the number of INSIDE corners in the
         chessboard's columns and rows.
@@ -104,34 +104,15 @@ def calibrate_camera(image_location='images_taken/1latest_image_from_camera',
         br_corner_rnd = np.rint(br)  # round pixel float to nearest integer
         cv.circle(img, (int(br_corner_rnd[0]), int(br_corner_rnd[1])), 50, (255, 255, 0))  # br is LIGHT BLUE
 
-        # calc pixel distance between corners
-        pix_width1 = distance(tl[0], tl[1], tr[0], tr[1])  # top side
-        pix_width2 = distance(bl[0], bl[1], br[0], br[1])  # bottom side
-        pix_height1 = distance(tl[0], tl[1], bl[0], bl[1])  # left side
-        pix_height2 = distance(tr[0], tr[1], br[0], br[1])  # right side
+        # call function to get red dot pixel location
+        red_dot_pix = find_red_dot(image_location=filename)
+        red_dot_pix = np.squeeze(red_dot_pix, axis=0)  # remove redundant array dimension
 
-        # calc error range from two different possible corners
-        pix_width_error = abs(pix_width1 - pix_width2)
-        pix_height_error = abs(pix_height1 - pix_height2)
-        # print('width error in pixels:', pix_width_error)
-        # print('height error in pixels:', pix_height_error)
+        # find red dot pix distance from origin
+        red_dot_from_origin = distance(red_dot_pix[0], red_dot_pix[1], tl[0], tl[1])
 
-        # use average to calc lengths of whole board
-        ave_pix_width = (pix_width1 + pix_width2) / 2  # width of inside board
-        ave_pix_height = (pix_height1 + pix_height2) / 2  # height of inside board
-        pix_all_width = (ave_pix_width / rows - 1) * (rows + 1)  # width of whole board
-        pix_all_height = (ave_pix_height / columns - 1) * (columns + 1)  # height of whole board
-
-        # calculate pixel to mm ratio
-        mm_width = width  # mm
-        mm_height = height  # mm
-        ratio1 = mm_width / pix_all_width  # 1 pixel is this many mm
-        ratio2 = mm_height / pix_all_height  # 1 pixel is this many mm
-        ratio_error = abs(ratio1 - ratio2)
-        pix_mm_ratio = (ratio1 + ratio2) / 2  # 1 pixel is this many mm
-        # print('1 pixel is ' + str(pix_mm_ratio) + 'mm and 1mm is ' + str(1 / pix_mm_ratio) + ' many pixels')
-        # print('possible error in mm per pixel is ' + str(ratio_error) + ' so max cumulative error is ' +
-        #       str(max(pixel_size[:]) * ratio_error) + 'mm')
+        # calc mm to pixel ratio
+        pix_mm_ratio = mm_dist/red_dot_from_origin
 
         # draw corners onto image
         cv.drawChessboardCorners(img, (columns, rows), corners_sub_pix, ret)
@@ -151,7 +132,100 @@ def calibrate_camera(image_location='images_taken/1latest_image_from_camera',
         #    if cv.waitKey(1) & 0xFF == ord('q'):
         #        break
 
-    return pix_mm_ratio, tl_corner_pix, ratio_error
+    return pix_mm_ratio, tl_corner_pix
+
+
+def find_red_dot(image_location='images_taken/1latest_image_from_camera.jpg'):
+    # load image
+    filename = image_location  # image location
+    initial_image = cv.imread(cv.samples.findFile(filename), cv.IMREAD_COLOR)
+
+    # check if image is loaded fine
+    if initial_image is None:
+        print('Error opening image!')
+        return -1
+
+    gray = cv.cvtColor(initial_image, cv.COLOR_BGR2GRAY)
+    blur_image = cv.medianBlur(gray, 5)
+
+    # parameters for Hough Circle algorithm
+    dp = 1  # high dp means low matrix resolution so takes circles that do not have clear boundary (default 1)
+    min_r = 40  # min pixel radius of screw (default 40)
+    max_r = 60  # max pixel radius of screw (default 60)
+    min_dist = int(min_r * 2)  # min distance between two screws
+    param1 = 60  # if low then more weak edges will be found so weak circles returned (default 60)
+    param2 = 30  # if low then more circles will be returned by HoughCircles (default 30)
+
+    # apply OpenCV HoughCircle algorithm
+    circles = cv.HoughCircles(blur_image, cv.HOUGH_GRADIENT, dp, min_dist,
+                              param1=param1, param2=param2,
+                              minRadius=min_r, maxRadius=max_r)
+
+    # get centres and radius into np.array
+    dot_location = np.array(circles)
+    dot_location = np.squeeze(dot_location, axis=0)  # remove redundant dimension
+
+    # initialise final image
+    final_image = initial_image
+
+    # remove non-red dots:
+    blue_thresh = 100  # must be less than this to be red dot (default 100)
+    green_thresh = 100  # must be less than this to be red dot (default 100)
+    red_thresh = 200  # must be greater than this to be red dot (default 200)
+
+    # add column to show think it is false positive
+    z1 = np.zeros((np.shape(dot_location)[0], 1))
+    dot_location = np.concatenate((dot_location, z1), axis=1)
+
+    # flag false pos by checking colour
+    for i in range(np.shape(dot_location)[0]):
+        pix_check_x = int(dot_location[(i, 0)])  # grab x coord
+        pix_check_y = int(dot_location[(i, 1)])  # grab y coord
+
+        # catch error of pixel being out of bounds (not sure why this error happens as pixel 1944x2592 shld exist)
+        if pix_check_y > 1943:
+            pix_check_y = 1943
+            print('ERROR IN Y PIXEL LOCATION')
+        if pix_check_x > 2591:
+            print('ERROR IN X PIXEL LOCATION')
+            pix_check_x = 2591
+
+        # find colours
+        blue = initial_image[pix_check_y, pix_check_x, 0]
+        green = initial_image[pix_check_y, pix_check_x, 1]
+        red = initial_image[pix_check_y, pix_check_x, 2]
+
+        # change flag
+        if blue > blue_thresh and green > green_thresh and red < red_thresh:
+            dot_location[i, 3] = 1
+
+    # remove all flagged presumed false positives and remove added flag column
+    dot_location = np.delete(dot_location, np.where(dot_location[:, 3] == 1)[0], 0)
+    dot_location = np.delete(dot_location, np.s_[-1:], axis=1)
+
+    # draw the detected circles
+    if circles is not None:
+        # removes decimals
+        circles_draw = np.uint16(np.around(dot_location))
+        # print('circles drawn:', circles_draw)
+        for i in circles_draw:
+            center = (i[0], i[1])
+            # circle center
+            cv.circle(final_image, center, 1, (0, 100, 100), 3)
+            # circle outline
+            radius = i[2]
+            # draws circles (r,b,g) colour
+            cv.circle(final_image, center, radius, (255, 0, 255), 3)
+
+    # save image as filename.jpeg
+    cv.imwrite('images_processed/1red_dot_location' + '.jpg', final_image)
+
+    # final dot colours (not needed) - need to check this works
+    blue = initial_image[int(dot_location[0, 1]), int(dot_location[0, 0]), 0]
+    green = initial_image[int(dot_location[0, 1]), int(dot_location[0, 0]), 1]
+    red = initial_image[int(dot_location[0, 1]), int(dot_location[0, 0]), 2]
+
+    return dot_location
 
 
 # function to return distance between 2 points
@@ -162,4 +236,6 @@ def distance(x1, y1, x2, y2):
 
 if __name__ == "__main__":
     output = calibrate_camera(image_location='images_taken/1latest_image_from_camera.jpg')
-    print(output)
+    #print(output)
+
+    find_red_dot(image_location='images_taken/1latest_image_from_camera.jpg')
