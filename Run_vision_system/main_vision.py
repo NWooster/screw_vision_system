@@ -26,7 +26,7 @@ def main_vision(argv):
     nathan_webcam = 1
     zara_webcam = 0
 
-    take_picture.take_picture(zara_webcam, 10)  # take image from webcam (camera 1) with specified autofocus time
+    #take_picture.take_picture(nathan_webcam, 10)  # take image from webcam (camera 1) with specified autofocus time
 
     # find pixel/mm ratio
     pix_to_mm, tl_corner_pix, ratio_error = calibrate_camera.calibrate_camera(image_location='images_taken/'
@@ -71,7 +71,7 @@ if __name__ == "__main__":
     print(all_screw_coords)
     print()
 
-    screw1_coord = all_screw_coords[0:]  # selects first screw coordinate
+    screw1_coord = all_screw_coords[17:]  # selects first screw coordinate
     screw1_coord = np.append(screw1_coord[0, :], [0])  # appends a 0 for the Z axis
 
     print('screw_coord', screw1_coord)
