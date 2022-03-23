@@ -12,6 +12,9 @@ import cv2 as cv
 import numpy as np
 import math
 
+# custom imports
+import calibrate_camera
+
 
 def mm_screw_location(pix_to_mm, origin_pix, ratio_error, image_location='images_taken/1latest_image_from_camera.jpg'):
     """
@@ -222,10 +225,21 @@ def distance(x1, y1, x2, y2):
 
 
 if __name__ == "__main__":
+
+    pix_to_mm, tl_corner_pix, ratio_error = calibrate_camera.calibrate_camera(image_location='images_taken/'
+                                                                                             '1latest_image_from_'
+                                                                                             'camera.jpg')
+
     # test with different mm ratios (normally get from calibrate camera)
     #mm_ratio = 0.0579  # (from notes calc)
     #mm_ratio = 0.05765  # (from average of 3 screws notes calc)
     #mm_ratio = 0.07446754918921591  # from large rectangle cheq square
+    #mm_ratio = 0.05741293532  # (from top right screw)
     mm_ratio = 0.05718463  # (from top right screw)
-    mm_screw_location(pix_to_mm=mm_ratio, origin_pix=np.array([343.71344, 1510.1456]),
-                      ratio_error=0.00010089773771800037)
+
+    pix_to_mm = mm_ratio
+
+    print('ratio is:' + str(pix_to_mm))
+
+    mm_screw_location(pix_to_mm, tl_corner_pix, ratio_error,
+                      image_location='images_taken/1latest_image_from_camera.jpg')
