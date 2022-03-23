@@ -26,17 +26,20 @@ def main_vision(argv):
     nathan_webcam = 1
     zara_webcam = 0
 
-    #take_picture.take_picture(nathan_webcam, 10)  # take image from webcam (camera 1) with specified autofocus time
+    take_picture.take_picture(zara_webcam, 10)  # take image from webcam (camera 1) with specified autofocus time
 
     # find pixel/mm ratio
     pix_to_mm, tl_corner_pix, ratio_error = calibrate_camera.calibrate_camera(image_location='images_taken/'
                                                                                              '1latest_image_from_'
                                                                                              'camera.jpg')
+    # known ratio (delete if calc everytime)
+    pix_to_mm = 0.05718463
 
     # output screw locations in mm
     screw_locations, max_mm_error = screw_location.mm_screw_location(pix_to_mm, tl_corner_pix, ratio_error,
                                                                      image_location='images_taken/'
                                                                                     '1latest_image_from_camera.jpg')
+
     # select centres only
     screw_centres = screw_locations[:, :2]
 
@@ -62,7 +65,6 @@ def main_vision(argv):
 
 
 if __name__ == "__main__":
-
     # what next code will do
     all_screw_coords = main_vision(sys.argv[0])  # runs vision algorithm
     all_screw_coords = all_screw_coords[all_screw_coords[:, 1].argsort()]  # re-order based on y coordinate
