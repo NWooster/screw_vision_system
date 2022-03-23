@@ -26,17 +26,17 @@ def main_vision(argv):
     nathan_webcam = 1
     zara_webcam = 0
 
-    #take_picture.take_picture(nathan_webcam, 10)  # take image from webcam (camera 1) with specified autofocus time
+    # take_picture.take_picture(nathan_webcam, 10)  # take image from webcam (camera 1) with specified autofocus time
 
     # find pixel/mm ratio
-    pix_to_mm, tl_corner_pix, ratio_error = calibrate_camera.calibrate_camera(image_location='images_taken/'
-                                                                                             '1latest_image_from_'
-                                                                                             'camera.jpg')
+    pix_to_mm, tl_corner_pix = calibrate_camera.calibrate_camera(image_location='images_taken/'
+                                                                                '1latest_image_from_'
+                                                                                'camera.jpg', mm_dist=111)
     # known ratio (delete if calc everytime)
-    pix_to_mm = 0.05718463
+    # pix_to_mm = 0.05718463
 
     # output screw locations in mm
-    screw_locations, max_mm_error = screw_location.mm_screw_location(pix_to_mm, tl_corner_pix, ratio_error,
+    screw_locations = screw_location.mm_screw_location(pix_to_mm, tl_corner_pix,
                                                                      image_location='images_taken/'
                                                                                     '1latest_image_from_camera.jpg')
 
@@ -56,8 +56,6 @@ def main_vision(argv):
 
     # Results
     print('Resolution is ' + str(pix_to_mm) + 'mm (1 pixel is ' + str(pix_to_mm) + 'mm)')  # resolution
-
-    print('max error due to mm to pixel conversion error is: ' + str(max_mm_error) + 'mm')
     print()
     print('------------------------------')
 
