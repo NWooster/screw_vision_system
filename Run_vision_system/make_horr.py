@@ -10,7 +10,9 @@ Script for checking two holes are horizontal.
 
 import cv2 as cv
 import numpy as np
-import math
+
+# custom imports
+import take_picture
 
 
 def horizontal_check(image_location='images_taken/1latest_image_from_camera.jpg'):
@@ -62,12 +64,9 @@ def horizontal_check(image_location='images_taken/1latest_image_from_camera.jpg'
             # draws circles (r,b,g) colour
             cv.circle(final_image, center, radius, (255, 0, 255), 3)
 
-    # save image as filename.jpeg
-    cv.imwrite('images_processed/horizontal_holes' + '.jpg', final_image)
-
     # check which one is top left, top right, bottom left, bottom right
     hole_locations = hole_locations[hole_locations[:, 1].argsort()]  # re-order based on y coordinate
-    print(hole_locations)
+
     if hole_locations[0, 0] < hole_locations[1, 0]:
         tl = hole_locations[0, :]
         tr = hole_locations[1, :]
@@ -79,8 +78,15 @@ def horizontal_check(image_location='images_taken/1latest_image_from_camera.jpg'
         bl = hole_locations[2, :]
         br = hole_locations[3, :]
     else:
-        bl = hole_locations[2, :]
-        br = hole_locations[3, :]
+        bl = hole_locations[3, :]
+        br = hole_locations[2, :]
+
+    # check assigned corners correctly
+    if tl[1] < bl[1] and tl[0] < tr[0] and tr[1] < br[1] and br[0] > bl[0]:
+        # everything correct
+        pass
+    else:
+        print('error corners not in the right location')
 
     # calc difference
     pixel_x_diff1 = tl[0] - bl[0]
@@ -94,26 +100,57 @@ def horizontal_check(image_location='images_taken/1latest_image_from_camera.jpg'
     # print instructions
     # x
     if tl[0] > bl[0] and tr[0] > br[0]:
-        print('rotate camera clockwise to account for x ' + str(ave_x_diff) + 'pixels')
-    if tl[0] < bl[0] and tr[0] < br[0]:
-        print('rotate camera anticlockwise to account for x ' + str(ave_x_diff) + 'pixels')
+        print('rotate camera clockwise to account for x: ' + str(ave_x_diff) + 'pixels')
+    elif tl[0] < bl[0] and tr[0] < br[0]:
+        print('rotate camera anticlockwise to account for x: ' + str(ave_x_diff) + 'pixels')
     else:
-        print('x difference do not agree, left:' + str(pixel_x_diff1) + 'right:' + str(pixel_x_diff2))
+        print('x difference do not agree, left:' + str(pixel_x_diff1) + '  right:' + str(pixel_x_diff2))
+        if abs(pixel_x_diff1) > abs(pixel_x_diff2):
+            if tl[0] > bl[0]:
+                print('however probably rotate clockwise')
+            else:
+                print('however probably rotate anticlockwise')
+        if abs(pixel_x_diff2) > abs(pixel_x_diff1):
+            if tr[0] > br[0]:
+                print('however probably rotate clockwise')
+            else:
+                print('however probably rotate anticlockwise')
 
     # y
     if tl[1] > tr[1] and bl[1] > br[1]:
-        print('rotate camera clockwise to account for y ' + str(ave_y_diff) + 'pixels')
-    if tl[1] < tr[1] and bl[1] < br[1]:
-        print('rotate camera anticlockwise to account for y ' + str(ave_y_diff) + 'pixels')
+        print('rotate camera anticlockwise to account for y: ' + str(ave_y_diff) + 'pixels')
+    elif tl[1] < tr[1] and bl[1] < br[1]:
+        print('rotate camera clockwise to account for y: ' + str(ave_y_diff) + 'pixels')
     else:
-        print('y difference do not agree, left:' + str(pixel_y_diff1) + 'right:' + str(pixel_y_diff2))
+        print('y difference do not agree, top:' + str(pixel_y_diff1) + 'bottom:' + str(pixel_y_diff2))
+        if abs(pixel_y_diff1) > abs(pixel_y_diff2):
+            if tl[1] > tr[1]:
+                print('however probably rotate anticlockwise')
+            else:
+                print('however probably rotate clockwise')
+        if abs(pixel_y_diff2) > abs(pixel_y_diff1):
+            if bl[1] > br[1]:
+                print('however probably rotate anticlockwise')
+            else:
+                print('however probably rotate clockwise')
 
+    # draw circle at top left BLACK
+    cv.circle(final_image, (int(tl[0]), int(tl[1])), 100, (0, 0, 0))  # tl is BLACK
 
+    # draw circle at top right RED
+    cv.circle(final_image, (int(tr[0]), int(tr[1])), 100, (0, 0, 255))
 
+    # draw circle at bottom left GREEN
+    cv.circle(final_image, (int(bl[0]), int(bl[1])), 100, (0, 255, 0))
 
+    # draw circle at bottom right LIGHT BLUE
+    cv.circle(final_image, (int(br[0]), int(br[1])), 100, (255, 255, 0))
 
-
+    # save image as filename.jpeg
+    cv.imwrite('images_processed/horizontal_holes' + '.jpg', final_image)
 
 
 if __name__ == "__main__":
+    nathan_webcam = 1
+    take_picture.take_picture(nathan_webcam, 10)  # take image from webcam (camera 1) with specified autofocus time
     horizontal_check()
