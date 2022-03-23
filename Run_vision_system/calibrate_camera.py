@@ -61,29 +61,54 @@ def calibrate_camera(image_location='images_taken/1latest_image_from_camera',
         pixel_size = img.shape[:2]
         # print('image size x:', pixel_size[1], 'y:', pixel_size[0])  # longer x creates rectangle
 
-        # select 4 corners (B,G,R) (top left corner should be black)
-        # sometimes changes so just edit name based off colour
-        br_corner = corner_location[columns * rows - rows, :]  # extract top left corner
-        br_corner_rnd = np.rint(br_corner)  # round pixel float to nearest integer
-        cv.circle(img, (int(br_corner_rnd[0]), int(br_corner_rnd[1])), 50, (0, 255, 0))  # draw circle at location
+        # select 4 corners
+        corner1 = corner_location[columns * rows - rows, :]
+        corner2 = corner_location[0, :]
+        corner3 = corner_location[columns - 1, :]
+        corner4 = corner_location[columns * rows - 1, :]
+        four_corners = np.array([corner1, corner2, corner3, corner4])
 
-        bl_corner = corner_location[0, :]  # extract top right corner
-        bl_corner_rnd = np.rint(bl_corner)  # round pixel float to nearest integer
-        cv.circle(img, (int(bl_corner_rnd[0]), int(bl_corner_rnd[1])), 50, (0, 0, 255))  # draw circle at location
+        # identify which corner is top left, top right, bottom left, bottom right
+        four_corners = four_corners[four_corners[:, 1].argsort()]  # re-order based on y coordinate
+        if four_corners[0, 0] < four_corners[1, 0]:
+            tl = four_corners[0, :]
+            tr = four_corners[1, :]
+        else:
+            tl = four_corners[1, :]
+            tr = four_corners[0, :]
 
-        tl_corner = corner_location[columns - 1, :]  # extract bottom right corner
-        tl_corner_rnd = np.rint(tl_corner)  # round pixel float to nearest integer
+        if four_corners[2, 0] < four_corners[3, 0]:
+            bl = four_corners[2, :]
+            br = four_corners[3, :]
+        else:
+            bl = four_corners[3, :]
+            br = four_corners[2, :]
+
+        # check assigned corners correctly
+        if tl[1] < bl[1] and tl[0] < tr[0] and tr[1] < br[1] and br[0] > bl[0]:
+            # everything correct
+            pass
+        else:
+            print('error corners not in the right location')
+
+        # circle 4 corners (B,G,R) (top left corner should be black)
+        tl_corner_rnd = np.rint(tl)  # round pixel float to nearest integer
         cv.circle(img, (int(tl_corner_rnd[0]), int(tl_corner_rnd[1])), 50, (0, 0, 0))  # tl is BLACK
 
-        tr_corner = corner_location[columns * rows - 1, :]  # extract bottom left corner
-        tr_corner_rnd = np.rint(tr_corner)  # round pixel float to nearest integer
-        cv.circle(img, (int(tr_corner_rnd[0]), int(tr_corner_rnd[1])), 50, (255, 0, 0))  # draw circle at location
+        tr_corner_rnd = np.rint(tr)  # round pixel float to nearest integer
+        cv.circle(img, (int(tr_corner_rnd[0]), int(tr_corner_rnd[1])), 50, (0, 0, 255))  # tr is RED
+
+        bl_corner_rnd = np.rint(bl)  # round pixel float to nearest integer
+        cv.circle(img, (int(bl_corner_rnd[0]), int(bl_corner_rnd[1])), 50, (0, 255, 0))  # bl is GREEN
+
+        br_corner_rnd = np.rint(br)  # round pixel float to nearest integer
+        cv.circle(img, (int(br_corner_rnd[0]), int(br_corner_rnd[1])), 50, (255, 255, 0))  # br is LIGHT BLUE
 
         # calc pixel distance between corners
-        pix_width1 = distance(tl_corner_rnd[0], tl_corner_rnd[1], tr_corner_rnd[0], tr_corner_rnd[1])  # top side
-        pix_width2 = distance(bl_corner_rnd[0], bl_corner_rnd[1], br_corner_rnd[0], br_corner_rnd[1])  # bottom side
-        pix_height1 = distance(tl_corner_rnd[0], tl_corner_rnd[1], bl_corner_rnd[0], bl_corner_rnd[1])  # left side
-        pix_height2 = distance(tr_corner_rnd[0], tr_corner_rnd[1], br_corner_rnd[0], br_corner_rnd[1])  # right side
+        pix_width1 = distance(tl[0], tl[1], tr[0], tr[1])  # top side
+        pix_width2 = distance(bl[0], bl[1], br[0], br[1])  # bottom side
+        pix_height1 = distance(tl[0], tl[1], bl[0], bl[1])  # left side
+        pix_height2 = distance(tr[0], tr[1], br[0], br[1])  # right side
 
         # calc error range from two different possible corners
         pix_width_error = abs(pix_width1 - pix_width2)
@@ -115,7 +140,7 @@ def calibrate_camera(image_location='images_taken/1latest_image_from_camera',
         cv.imwrite('images_processed/1chequered_cal' + '.jpg', img)
 
         # return top left corner coordinates in pixels
-        tl_corner_pix = np.array(tl_corner)
+        tl_corner_pix = np.array(tl)
 
         # print()
         # print('press "q" to exit')
