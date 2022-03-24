@@ -106,7 +106,8 @@ def calibrate_camera(image_location='images_taken/1latest_image_from_camera', mm
 
         # call function to get red dot pixel location
         red_dot_pix = find_red_dot(image_location=filename)
-        red_dot_pix = np.squeeze(red_dot_pix, axis=0)  # remove redundant array dimension
+        #red_dot_pix = np.squeeze(red_dot_pix, axis=0)  # remove redundant array dimension
+
 
         # find red dot pix distance from origin
         red_dot_from_origin = distance(red_dot_pix[0], red_dot_pix[1], tl[0], tl[1])
@@ -169,9 +170,9 @@ def find_red_dot(image_location='images_taken/1latest_image_from_camera.jpg'):
     final_image = initial_image
 
     # remove non-red dots:
-    blue_thresh = 100  # must be less than this to be red dot (default 100)
-    green_thresh = 100  # must be less than this to be red dot (default 100)
-    red_thresh = 200  # must be greater than this to be red dot (default 200)
+    blue_thresh = 50  # must be less than this to be red dot (default 100)
+    green_thresh = 50  # must be less than this to be red dot (default 100)
+    red_thresh = 110  # must be greater than this to be red dot (default 200)
 
     # add column to show think it is false positive
     z1 = np.zeros((np.shape(dot_location)[0], 1))
@@ -196,12 +197,33 @@ def find_red_dot(image_location='images_taken/1latest_image_from_camera.jpg'):
         red = initial_image[pix_check_y, pix_check_x, 2]
 
         # change flag
-        if blue > blue_thresh and green > green_thresh and red < red_thresh:
+        if blue > blue_thresh or green > green_thresh or red < red_thresh:
             dot_location[i, 3] = 1
 
     # remove all flagged presumed false positives and remove added flag column
     dot_location = np.delete(dot_location, np.where(dot_location[:, 3] == 1)[0], 0)
     dot_location = np.delete(dot_location, np.s_[-1:], axis=1)
+
+    # write colour as text
+    font = cv.FONT_HERSHEY_SIMPLEX  # set font
+    for i in range(np.shape(dot_location)[0]):
+
+        pix_check_x = int(dot_location[(i, 0)])  # grab x coord
+        pix_check_y = int(dot_location[(i, 1)])  # grab y coord
+
+        blue = initial_image[pix_check_y, pix_check_x, 0]
+        green = initial_image[pix_check_y, pix_check_x, 1]
+        red = initial_image[pix_check_y, pix_check_x, 2]
+
+        cv.putText(final_image, str(blue),
+                   (int(dot_location[i, 0]), int(dot_location[i, 1]) - 50),
+                   font, 0.7, (255, 0, 0), 2)
+        cv.putText(final_image, str(green),
+                   (int(dot_location[i, 0])+50, int(dot_location[i, 1]) - 50),
+                   font, 0.7, (0, 255, 0), 2)
+        cv.putText(final_image, str(red),
+                   (int(dot_location[i, 0]+100), int(dot_location[i, 1]) - 50),
+                   font, 0.7, (0, 0, 255), 2)
 
     # draw the detected circles
     if circles is not None:
@@ -219,11 +241,6 @@ def find_red_dot(image_location='images_taken/1latest_image_from_camera.jpg'):
 
     # save image as filename.jpeg
     cv.imwrite('images_processed/1red_dot_location' + '.jpg', final_image)
-
-    # final dot colours (not needed) - need to check this works
-    blue = initial_image[int(dot_location[0, 1]), int(dot_location[0, 0]), 0]
-    green = initial_image[int(dot_location[0, 1]), int(dot_location[0, 0]), 1]
-    red = initial_image[int(dot_location[0, 1]), int(dot_location[0, 0]), 2]
 
     return dot_location
 
