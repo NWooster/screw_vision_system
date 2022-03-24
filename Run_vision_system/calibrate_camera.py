@@ -241,7 +241,7 @@ def find_red_dot(image_location='images_taken/1latest_image_from_camera.jpg'):
 
     # check if 2 dots located
     if np.shape(dot_location)[0] != 2:
-        print('ERROR: MORE THAN 2 RED DOTS FOUND')
+        print('ERROR: EXACTLY 2 RED DOTS FOUND')
 
     return dot_location
 
