@@ -167,9 +167,9 @@ def find_red_dot(image_location='images_taken/1latest_image_from_camera.jpg'):
     final_image = initial_image
 
     # remove non-red dots:
-    blue_thresh = 50  # must be less than this to be red dot (default 100)
-    green_thresh = 50  # must be less than this to be red dot (default 100)
-    red_thresh = 110  # must be greater than this to be red dot (default 200)
+    blue_thresh = 80  # must be less than this to be red dot (default 80)
+    green_thresh = 80  # must be less than this to be red dot (default 80)
+    red_thresh = 100  # must be greater than this to be red dot (default 100)
 
     # add column to show think it is false positive
     z1 = np.zeros((np.shape(dot_location)[0], 1))
@@ -239,6 +239,10 @@ def find_red_dot(image_location='images_taken/1latest_image_from_camera.jpg'):
     # save image as filename.jpeg
     cv.imwrite('images_processed/1red_dot_location' + '.jpg', final_image)
 
+    # check if 2 dots located
+    if np.shape(dot_location)[0] != 2:
+        print('ERROR: MORE THAN 2 RED DOTS FOUND')
+
     return dot_location
 
 
@@ -250,6 +254,4 @@ def distance(x1, y1, x2, y2):
 
 if __name__ == "__main__":
     output = calibrate_camera(image_location='images_taken/1latest_image_from_camera.jpg')
-    #print(output)
-
-    find_red_dot(image_location='images_taken/1latest_image_from_camera.jpg')
+    print(output)
