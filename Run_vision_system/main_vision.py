@@ -26,7 +26,7 @@ def main_vision(argv):
     nathan_webcam = 1
     zara_webcam = 0
 
-    take_picture.take_picture(nathan_webcam, 10)  # take image from webcam (camera 1) with specified autofocus time
+    #take_picture.take_picture(nathan_webcam, 10)  # take image from webcam (camera 1) with specified autofocus time
 
     # find pixel/mm ratio
     pix_to_mm, tl_corner_pix = calibrate_camera.calibrate_camera(image_location='images_taken/'
@@ -65,7 +65,6 @@ def main_vision(argv):
 if __name__ == "__main__":
     # what next code will do
     all_screw_coords = main_vision(sys.argv[0])  # runs vision algorithm
-    all_screw_coords = all_screw_coords[all_screw_coords[:, 1].argsort()]  # re-order based on y coordinate
     print(all_screw_coords)
     print()
 
