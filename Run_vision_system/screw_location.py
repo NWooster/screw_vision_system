@@ -224,7 +224,7 @@ def distance(x1, y1, x2, y2):
 if __name__ == "__main__":
     pix_to_mm, tl_corner_pix, = calibrate_camera.calibrate_camera(image_location='images_taken/'
                                                                                  '1latest_image_from_'
-                                                                                 'camera.jpg', mm_dist=111)
+                                                                                 'camera.jpg', mm_dist=79.14)
 
     # test with different mm ratios (normally get from calibrate camera)
     # mm_ratio = 0.0579  # (from notes calc)
