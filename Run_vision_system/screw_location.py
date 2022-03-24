@@ -81,6 +81,11 @@ def mm_screw_location(pix_to_mm, origin_pix, image_location='images_taken/1lates
     # save image
     cv.imwrite('images_processed/1screw_mm_output' + '.jpg', image)
 
+    # order screws by closest distance to origin
+    mm_locations = np.concatenate((mm_locations, direct_mm), axis=1)  # put direct_mm array on end of mm_locations
+    mm_locations = mm_locations[mm_locations[:, 3].argsort()]  # re-order based on direct_mm
+    mm_locations = np.delete(mm_locations, -1, axis=1)  # delete last collumn
+
     return mm_locations
 
 
