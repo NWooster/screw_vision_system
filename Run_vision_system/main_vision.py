@@ -68,12 +68,12 @@ if __name__ == "__main__":
     print(all_screw_coords)
     print()
 
-    screw1_coord = all_screw_coords[0:]  # selects a screw coordinate (0 = first screw)
+    screw1_coord = all_screw_coords[3:]  # selects a screw coordinate (0 = first screw)
     screw1_coord = np.append(screw1_coord[0, :], [0])  # appends a 0 for the Z axis
 
     print('screw_coord', screw1_coord)
     print()
     print('Add this coordinate to the constant (x,y) distance of gantry (0,0) to the INNER top left corner to get '
           'where to move gantry to in mm.')
-    array_to_add = np.array([43, 188, 0])
+    array_to_add = np.array([40.1, 186.7, 0])
     print(array_to_add)
