@@ -14,14 +14,13 @@ import math
 from resize_to_fit_screen import resize
 
 
-def calibrate_camera(image_location='images_taken/1latest_image_from_camera', mm_dist=111,
+def calibrate_camera(image_location='images_taken/1latest_image_from_camera', mm_dist=73.2,
                      columns=7, rows=7):
     """
         `columns` and `rows` are the number of INSIDE corners in the
         chessboard's columns and rows.
-        'width' is the length in mm of the side of the chessboard.
-        'height' is the length in mm of the side of the chessboard.
-        """
+        'mm_dist' is the distance in mm between each red dot.
+    """
 
     # load image
     filename = image_location  # image location
@@ -106,14 +105,12 @@ def calibrate_camera(image_location='images_taken/1latest_image_from_camera', mm
 
         # call function to get red dot pixel location
         red_dot_pix = find_red_dot(image_location=filename)
-        #red_dot_pix = np.squeeze(red_dot_pix, axis=0)  # remove redundant array dimension
 
-
-        # find red dot pix distance from origin
-        red_dot_from_origin = distance(red_dot_pix[0], red_dot_pix[1], tl[0], tl[1])
+        # find red dot pix distance from each other
+        red_dot_dist = distance(red_dot_pix[0, 0], red_dot_pix[0, 1], red_dot_pix[1, 0], red_dot_pix[1, 1])
 
         # calc mm to pixel ratio
-        pix_mm_ratio = mm_dist/red_dot_from_origin
+        pix_mm_ratio = mm_dist/red_dot_dist
 
         # draw corners onto image
         cv.drawChessboardCorners(img, (columns, rows), corners_sub_pix, ret)
