@@ -31,7 +31,7 @@ def main_vision(argv):
     # find pixel/mm ratio
     pix_to_mm, tl_corner_pix = calibrate_camera.calibrate_camera(image_location='images_taken/'
                                                                                 '1latest_image_from_'
-                                                                                'camera.jpg', mm_dist=73.2)
+                                                                                'camera.jpg', mm_dist=79.14)
     # known ratio (delete if calc everytime)
     # pix_to_mm = 0.05718463
 
