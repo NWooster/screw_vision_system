@@ -17,7 +17,7 @@ import calibrate_camera
 import screw_location
 
 
-def main_vision(argv):
+def main_vision():
     """
     Main function called to run the vision algorithm.
     """
@@ -64,7 +64,7 @@ def main_vision(argv):
 
 if __name__ == "__main__":
     # what next code will do
-    all_screw_coords = main_vision(sys.argv[0])  # runs vision algorithm
+    all_screw_coords = main_vision()  # runs vision algorithm
     print(all_screw_coords)
     print()
 
