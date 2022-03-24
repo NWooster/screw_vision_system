@@ -68,7 +68,7 @@ if __name__ == "__main__":
     print(all_screw_coords)
     print()
 
-    screw1_coord = all_screw_coords[0:]  # selects first screw coordinate
+    screw1_coord = all_screw_coords[0:]  # selects a screw coordinate (0 = first screw)
     screw1_coord = np.append(screw1_coord[0, :], [0])  # appends a 0 for the Z axis
 
     print('screw_coord', screw1_coord)
