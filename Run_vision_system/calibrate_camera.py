@@ -14,7 +14,7 @@ import math
 from resize_to_fit_screen import resize
 
 
-def calibrate_camera(image_location='images_taken/1latest_image_from_camera', mm_dist=73.2,
+def calibrate_camera(image_location='images_taken/1latest_image_from_camera', mm_dist=79.14,
                      columns=7, rows=7):
     """
         `columns` and `rows` are the number of INSIDE corners in the
