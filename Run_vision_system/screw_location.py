@@ -39,6 +39,27 @@ def mm_screw_location(pix_to_mm, origin_pix, image_location='images_taken/1lates
     for i in range(np.shape(pix_locations)[0]):
         direct_pix[i] = distance(pix_locations[i, 0], pix_locations[i, 1], origin_pix[0, 0], origin_pix[0, 1])
         direct_mm[i] = direct_pix[i] * pix_to_mm
+
+    # order screws by closest distance to origin:
+    # pixel arrays
+    pix_locations = np.concatenate((pix_locations, direct_pix), axis=1)  # put direct_mm array on end of mm_locations
+    pix_locations = pix_locations[pix_locations[:, 3].argsort()]  # re-order based on direct_mm
+    pix_locations = np.delete(pix_locations, -1, axis=1)  # delete last column
+
+    pix_loc_from_origin = np.concatenate((pix_loc_from_origin, direct_pix), axis=1)  # put array on end
+    pix_loc_from_origin = pix_loc_from_origin[pix_loc_from_origin[:, 3].argsort()]  # re-order based on direct_mm
+    pix_loc_from_origin = np.delete(pix_loc_from_origin, -1, axis=1)  # delete last column
+
+    direct_pix = np.sort(direct_pix, axis=0)  # order 1D array
+
+    # mm array
+    mm_locations = np.concatenate((mm_locations, direct_mm), axis=1)  # put direct_mm array on end of mm_locations
+    mm_locations = mm_locations[mm_locations[:, 3].argsort()]  # re-order based on direct_mm
+    mm_locations = np.delete(mm_locations, -1, axis=1)  # delete last column
+
+    direct_mm = np.sort(direct_mm, axis=0)  # order 1D array
+
+    # round direct_pix and mm
     direct_pix = np.round(direct_pix, 0)  # round to int
     direct_mm = np.round(direct_mm, 2)  # round to 2 decimal place
 
@@ -54,6 +75,9 @@ def mm_screw_location(pix_to_mm, origin_pix, image_location='images_taken/1lates
     pix_loc_from_origin_rounded = np.round(pix_loc_from_origin_rounded, 1)  # round to 1 decimal place
     mm_locations_rounded = np.round(mm_locations_rounded, 1)  # round to 1 decimal place
     for i in range(np.shape(pix_locations)[0]):
+        cv.putText(image, str(i),
+                   (int(pix_locations[i, 0]) - 50, int(pix_locations[i, 1]) - 30),
+                   font, 1.2, (50, 205, 50), 2)
         cv.putText(image, str(direct_pix[i]),
                    (int(pix_locations[i, 0]), int(pix_locations[i, 1]) - 50),
                    font, 0.7, (100, 0, 255), 2)
@@ -69,22 +93,19 @@ def mm_screw_location(pix_to_mm, origin_pix, image_location='images_taken/1lates
     # color key
     cv.putText(image, text="KEY", org=(1600, 1450), fontFace=cv.FONT_HERSHEY_DUPLEX,
                fontScale=2, color=(0, 0, 0), thickness=3)
-    cv.putText(image, text="Direct distance in pixels from origin", org=(1600, 1500), fontFace=cv.FONT_HERSHEY_DUPLEX,
+    cv.putText(image, text="Screw number (start at 0)", org=(1600, 1500), fontFace=cv.FONT_HERSHEY_DUPLEX,
+               fontScale=1.5, color=(50, 205, 50), thickness=2)
+    cv.putText(image, text="Direct distance in pixels from origin", org=(1600, 1550), fontFace=cv.FONT_HERSHEY_DUPLEX,
                fontScale=1.5, color=(100, 0, 255), thickness=2)
-    cv.putText(image, text="Direct distance in mm from origin", org=(1600, 1550), fontFace=cv.FONT_HERSHEY_DUPLEX,
+    cv.putText(image, text="Direct distance in mm from origin", org=(1600, 1600), fontFace=cv.FONT_HERSHEY_DUPLEX,
                fontScale=1.5, color=(0, 255, 255), thickness=2)
-    cv.putText(image, text="[X, y, r] in pixels from origin", org=(1600, 1600), fontFace=cv.FONT_HERSHEY_DUPLEX,
+    cv.putText(image, text="[X, y, r] in pixels from origin", org=(1600, 1650), fontFace=cv.FONT_HERSHEY_DUPLEX,
                fontScale=1.5, color=(255, 255, 255), thickness=2)
-    cv.putText(image, text="[X, y, r] in mm from origin", org=(1600, 1650), fontFace=cv.FONT_HERSHEY_DUPLEX,
+    cv.putText(image, text="[X, y, r] in mm from origin", org=(1600, 1700), fontFace=cv.FONT_HERSHEY_DUPLEX,
                fontScale=1.5, color=(0, 0, 255), thickness=2)
 
     # save image
     cv.imwrite('images_processed/1screw_mm_output' + '.jpg', image)
-
-    # order screws by closest distance to origin
-    mm_locations = np.concatenate((mm_locations, direct_mm), axis=1)  # put direct_mm array on end of mm_locations
-    mm_locations = mm_locations[mm_locations[:, 3].argsort()]  # re-order based on direct_mm
-    mm_locations = np.delete(mm_locations, -1, axis=1)  # delete last collumn
 
     return mm_locations
 
