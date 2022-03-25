@@ -14,7 +14,7 @@ import math
 from resize_to_fit_screen import resize
 
 
-def calibrate_camera(image_location='images_taken/1latest_image_from_camera', mm_dist=79.14,
+def calibrate_camera(image_location='images_taken/1latest_image_from_camera', mm_dist=80,
                      columns=7, rows=7):
     """
         `columns` and `rows` are the number of INSIDE corners in the
@@ -167,7 +167,7 @@ def find_red_dot(image_location='images_taken/1latest_image_from_camera.jpg'):
     final_image = initial_image
 
     # remove non-red dots:
-    blue_thresh = 80  # must be less than this to be red dot (default 80)
+    blue_thresh = 100  # must be less than this to be red dot (default 80)
     green_thresh = 80  # must be less than this to be red dot (default 80)
     red_thresh = 100  # must be greater than this to be red dot (default 100)
 
