@@ -111,7 +111,7 @@ def mm_screw_location(pix_to_mm, origin_pix, image_location='images_taken/1lates
 
 
 # loads image, pre-process it, apply hough circle detection
-def pixel_screw_location(dp=1.42, param1=20, param2=49, blue_t=114, green_t=91, red_t=208,
+def pixel_screw_location(dp=1.9, param1=131, param2=51, blue_t=97, green_t=44, red_t=36,
                          image_location='images_taken/1latest_image_from_camera'):
     """
     Screw location function for pixel coordinates.
@@ -209,7 +209,7 @@ def pixel_screw_location(dp=1.42, param1=20, param2=49, blue_t=114, green_t=91, 
             # colour (default is 'and' statements)
             if blue < blue_thresh and green < green_thresh and red < red_thresh:
                 screw_locations[i, 3] = 1
-            # y location
+            # y location not on phone
             if pix_check_y > 1350:
                 screw_locations[i, 3] = 1
 
