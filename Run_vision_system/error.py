@@ -140,7 +140,7 @@ def total_error(estimate, ground_truth):
 
     # calculate total error from false neg, pos and location
     fpos_weight = 1
-    fneg_weight = 1.5
+    fneg_weight = 5
     e_total = (e_loc + (no_fp * fpos_weight) + (no_fn * fneg_weight))  # total error equation
 
     return no_fp, no_fn, no_correct, e_loc, e_total
