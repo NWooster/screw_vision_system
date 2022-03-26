@@ -111,7 +111,7 @@ def mm_screw_location(pix_to_mm, origin_pix, image_location='images_taken/1lates
 
 
 # loads image, pre-process it, apply hough circle detection
-def pixel_screw_location(dp=1.49, param1=17, param2=47, blue_t=107, green_t=362, red_t=58,
+def pixel_screw_location(dp=1.42, param1=20, param2=49, blue_t=114, green_t=91, red_t=208,
                          image_location='images_taken/1latest_image_from_camera'):
     """
     Screw location function for pixel coordinates.
@@ -160,7 +160,7 @@ def pixel_screw_location(dp=1.49, param1=17, param2=47, blue_t=107, green_t=362,
     dp = dp  # high dp means low matrix resolution so takes circles that do not have clear boundary (default 1)
     min_r = 18  # min pixel radius of screw (default 18)
     max_r = 30  # max pixel radius of screw (default 30)
-    min_dist = int(min_r * 2)  # min distance between two screws
+    min_dist = int(min_r * 1.5)  # min distance between two screws
     param1 = param1  # if low then more weak edges will be found so weak circles returned (default 60)
     param2 = param2  # if low then more circles will be returned by HoughCircles (default 30)
 
@@ -205,8 +205,12 @@ def pixel_screw_location(dp=1.49, param1=17, param2=47, blue_t=107, green_t=362,
             green = initial_image[pix_check_y, pix_check_x, 1]
             red = initial_image[pix_check_y, pix_check_x, 2]
 
-            # change flag
+            # change false pos flag
+            # colour (default is 'and' statements)
             if blue < blue_thresh and green < green_thresh and red < red_thresh:
+                screw_locations[i, 3] = 1
+            # y location
+            if pix_check_y > 1350:
                 screw_locations[i, 3] = 1
 
         # remove all flagged presumed false positives and remove added flag column
