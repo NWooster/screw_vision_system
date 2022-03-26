@@ -26,6 +26,12 @@ def tune(iterations=100):
     # initialise values:
     # error array
     error_array = []
+    # false pos array
+    fp_array = []
+    # false neg array
+    fn_array = []
+    # pixel loc error array
+    pix_loc_err = []
     # returned values from error function
     f_error = math.inf
     no_fp = math.inf
@@ -112,8 +118,11 @@ def tune(iterations=100):
             f_correct = no_correct
             f_e_loc = e_loc
 
-        # store past errors to plot
+        # store past errors results to plot
         error_array.append(f_error)
+        fp_array.append(f_fp)
+        fn_array.append(f_fn)
+        pix_loc_err.append(f_e_loc)
         print(i, 'iterations completed')
 
     print('There are', f_fp, 'screws falsely labelled,', f_fn, 'screws that were missed and',
@@ -125,14 +134,53 @@ def tune(iterations=100):
     print('optimised parameters: dp =', f_dp, '  param1 =', f_param1, '  param2=', f_param2,
           ' blue=', f_blue, ' green=', f_green, ' red=', f_red)
 
-    # plot iterations vs error
-    itera = np.arange(1, iterations+1)
-    sns.set()
-    plt.plot(itera, error_array)
-    plt.xlabel('Iteration')
-    plt.ylabel('Error')
-    plt.show()
+    plot_type = 1  # change how plot outputs (1or2)
+
+    if plot_type == 1:
+
+        itera = np.arange(1, iterations + 1)
+        error_array = np.array(error_array)
+        fp_array = np.array(fp_array)
+        fn_array = np.array(fn_array)
+
+        # plot iterations vs error function, fp, fn, pixel error
+        sns.set()
+        fig, ax = plt.subplots()
+        plt.plot(itera, error_array, 'r', label='Error function')
+        plt.plot(itera, fp_array, '--g', label='False positives')
+        plt.plot(itera, fn_array, '--b', label='False negatives')
+        plt.plot(itera, pix_loc_err, '--c', label='Mean pixel error')
+        plt.xlabel('Iteration')
+        plt.ylabel('Value')
+        plt.legend()
+        plt.show()
+
+    elif plot_type == 2:
+        # plot iterations vs error
+        itera = np.arange(1, iterations + 1)
+        sns.set()
+        plt.plot(itera, error_array)
+        plt.xlabel('Iteration')
+        plt.ylabel('Error')
+        plt.show()
+        # plot iterations vs fp and fn
+        itera = np.arange(1, iterations + 1)
+        sns.set()
+        plt.plot(itera, fp_array, label='False positives')
+        plt.plot(itera, fn_array, label='False negatives')
+        plt.xlabel('Iteration')
+        plt.ylabel('Number vision found')
+        plt.legend()
+        plt.show()
+        # plot iterations vs pixel error
+        itera = np.arange(1, iterations + 1)
+        sns.set()
+        plt.plot(itera, pix_loc_err)
+        plt.xlabel('Iteration')
+        plt.ylabel('Mean pixel error')
+        plt.legend()
+        plt.show()
 
 
 if __name__ == "__main__":
-    tune(iterations=5000)
+    tune(iterations=2000)
