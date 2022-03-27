@@ -67,7 +67,7 @@ def tune(iterations=100):
             green_t_high = 255
             red_t_low = 0
             red_t_high = 255
-        else:
+        elif i >= iterations/2:
             # refined parameter ranges
             range_mult = 0.25  # % change from current final parameter (range will be double this x current value)
             dp_low = round(f_dp - f_dp*range_mult, 2)
@@ -82,6 +82,21 @@ def tune(iterations=100):
             green_t_high = round(f_green + f_green*range_mult)
             red_t_low = round(f_red - f_red*range_mult)
             red_t_high = round(f_red + f_red*range_mult)
+
+        # just for re-do final graph (DELETE)
+    #    if i > iterations-1000:
+    #        dp_low = 1.6
+    #        dp_high = 1.61
+    #        param1_low = 45
+    #        param1_high = 46
+    #        param2_low = 45
+    #        param2_high = 46
+    #        blue_t_low = 289
+    #        blue_t_high = 290
+    #        green_t_low = 53
+    #        green_t_high = 54
+    #        red_t_low = 67
+    #        red_t_high = 68
 
         # make parameters random number in given range
         dp = round(random.uniform(dp_low, dp_high), 2)
@@ -184,4 +199,4 @@ def tune(iterations=100):
 
 
 if __name__ == "__main__":
-    tune(iterations=5000)
+    tune(iterations=50)
