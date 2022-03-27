@@ -84,9 +84,9 @@ def mm_screw_location(pix_to_mm, origin_pix, image_location='images_taken/1lates
         cv.putText(image, str(direct_mm[i]),
                    (int(pix_locations[i, 0]), int(pix_locations[i, 1]) - 25),
                    font, 0.7, (0, 255, 255), 2)
-        # cv.putText(image, str(pix_loc_from_origin_rounded[i]),
-        # (int(pix_locations[i, 0]), int(pix_locations[i, 1]) - 10),
-        # font, 0.7, (255, 255, 255), 2)
+        cv.putText(image, str(pix_loc_from_origin_rounded[i]),
+                   (int(pix_locations[i, 0]), int(pix_locations[i, 1]) - 10),
+                   font, 0.7, (255, 255, 255), 2)
         cv.putText(image, str(mm_locations_rounded[i]), (int(pix_locations[i, 0]), int(pix_locations[i, 1]) + 15),
                    font, 0.7, (0, 0, 255), 2)
 
@@ -111,7 +111,7 @@ def mm_screw_location(pix_to_mm, origin_pix, image_location='images_taken/1lates
 
 
 # loads image, pre-process it, apply hough circle detection
-def pixel_screw_location(dp=1.9, param1=131, param2=51, blue_t=97, green_t=44, red_t=36,
+def pixel_screw_location(dp=1.6, param1=45, param2=45, blue_t=289, green_t=53, red_t=67,
                          image_location='images_taken/1latest_image_from_camera'):
     """
     Screw location function for pixel coordinates.
@@ -210,7 +210,7 @@ def pixel_screw_location(dp=1.9, param1=131, param2=51, blue_t=97, green_t=44, r
             if blue < blue_thresh and green < green_thresh and red < red_thresh:
                 screw_locations[i, 3] = 1
             # y location not on phone
-            if pix_check_y > 1350:
+            if pix_check_y > 1290:
                 screw_locations[i, 3] = 1
 
         # remove all flagged presumed false positives and remove added flag column

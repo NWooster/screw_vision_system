@@ -153,6 +153,7 @@ def tune(iterations=100):
         plt.xlabel('Iteration')
         plt.ylabel('Value')
         plt.legend()
+        plt.savefig('images_processed/error_graph.png')  # save graph as png
         plt.show()
 
     elif plot_type == 2:
@@ -183,4 +184,4 @@ def tune(iterations=100):
 
 
 if __name__ == "__main__":
-    tune(iterations=2000)
+    tune(iterations=5000)
