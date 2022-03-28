@@ -33,8 +33,8 @@ def click_event(event, x, y, flags, param):
 
 
 # specify what side of image to show
-#side_of_image = "left"
-side_of_image = "right"
+side_of_image = "left"
+#side_of_image = "right"
 
 # image path
 filename = 'images_taken/1latest_image_from_camera.jpg'
@@ -51,7 +51,7 @@ if side_of_image == "right":
     y_lower = 0
     x_upper = 2592
 
-    x_lower = 1920  # IMPORTANT crop place
+    x_lower = 1700  # IMPORTANT crop place (default for home comp is 1920 and lab comp is 1700)
 
     # crop image
     img = img[y_lower:y_upper, x_lower:x_upper]
