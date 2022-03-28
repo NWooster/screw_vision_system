@@ -181,16 +181,16 @@ def draw_error(estimate, ground_truth, image_location='images_taken/1latest_imag
                           color=(0, 255, 0), thickness=-1)
 
     # color key
-    cv.putText(image, text="KEY", org=(1800, 1450), fontFace=cv.FONT_HERSHEY_DUPLEX,
-               fontScale=2, color=(0, 0, 0), thickness=3)
-    cv.putText(image, text="False positive screws", org=(1800, 1500), fontFace=cv.FONT_HERSHEY_DUPLEX,
-               fontScale=1.5, color=(0, 255, 255), thickness=2)
-    cv.putText(image, text="Screws not found", org=(1800, 1550), fontFace=cv.FONT_HERSHEY_DUPLEX,
-               fontScale=1.5, color=(0, 0, 255), thickness=2)
-    cv.putText(image, text="Screws correctly found", org=(1800, 1600), fontFace=cv.FONT_HERSHEY_DUPLEX,
-               fontScale=1.5, color=(255, 0, 255), thickness=2)
-    cv.putText(image, text="Ground truths", org=(1800, 1650), fontFace=cv.FONT_HERSHEY_DUPLEX,
-               fontScale=1.5, color=(0, 255, 0), thickness=2)
+    cv.putText(image, text="KEY", org=(1400, 1450), fontFace=cv.FONT_HERSHEY_DUPLEX,
+               fontScale=4, color=(0, 0, 0), thickness=3)
+    cv.putText(image, text="False positive screws", org=(1400, 1530), fontFace=cv.FONT_HERSHEY_DUPLEX,
+               fontScale=3, color=(0, 255, 255), thickness=2)
+    cv.putText(image, text="Screws not found", org=(1400, 1600), fontFace=cv.FONT_HERSHEY_DUPLEX,
+               fontScale=3, color=(0, 0, 255), thickness=2)
+    cv.putText(image, text="Screws correctly found", org=(1400, 1670), fontFace=cv.FONT_HERSHEY_DUPLEX,
+               fontScale=3, color=(255, 0, 255), thickness=2)
+    cv.putText(image, text="Ground truths", org=(1400, 1740), fontFace=cv.FONT_HERSHEY_DUPLEX,
+               fontScale=3, color=(0, 255, 0), thickness=2)
 
     # resize and show image
     resized_image = resize_to_fit_screen.resize(image, 1000)

@@ -78,15 +78,15 @@ def mm_screw_location(pix_to_mm, origin_pix, image_location='images_taken/1lates
         cv.putText(image, str(i),
                    (int(pix_locations[i, 0]) - 50, int(pix_locations[i, 1]) - 30),
                    font, 1.2, (50, 205, 50), 2)
-        cv.putText(image, str(direct_pix[i]),
-                   (int(pix_locations[i, 0]), int(pix_locations[i, 1]) - 50),
-                   font, 0.7, (100, 0, 255), 2)
+        #cv.putText(image, str(direct_pix[i]),
+        #           (int(pix_locations[i, 0]), int(pix_locations[i, 1]) - 50),
+        #           font, 0.7, (100, 0, 255), 2)
         cv.putText(image, str(direct_mm[i]),
                    (int(pix_locations[i, 0]), int(pix_locations[i, 1]) - 25),
                    font, 0.7, (0, 255, 255), 2)
-        cv.putText(image, str(pix_loc_from_origin_rounded[i]),
-                   (int(pix_locations[i, 0]), int(pix_locations[i, 1]) - 10),
-                   font, 0.7, (255, 255, 255), 2)
+        #cv.putText(image, str(pix_loc_from_origin_rounded[i]),
+        #           (int(pix_locations[i, 0]), int(pix_locations[i, 1]) - 10),
+        #           font, 0.7, (255, 255, 255), 2)
         cv.putText(image, str(mm_locations_rounded[i]), (int(pix_locations[i, 0]), int(pix_locations[i, 1]) + 15),
                    font, 0.7, (0, 0, 255), 2)
 
