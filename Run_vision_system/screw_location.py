@@ -65,10 +65,10 @@ def mm_screw_location(pix_to_mm, origin_pix, image_location='images_taken/1lates
 
     # Generate image
     image = cv.imread(cv.samples.findFile('images_processed/1screw_pixel_output.jpg'), cv.IMREAD_COLOR)
-    cv.circle(image, (int(origin_pix[0, 0]), int(origin_pix[0, 1])), 25, (0, 0, 0))  # draw circle at origin
+    cv.circle(image, (int(origin_pix[0, 0]), int(origin_pix[0, 1])), 25, (0, 0, 255), thickness=2)  # draw origin
     font = cv.FONT_HERSHEY_SIMPLEX  # set font
     # place origin text
-    cv.putText(image, '(0,0)', (int(origin_pix[0, 0]), int(origin_pix[0, 1])), font, 1, (0, 0, 255), 2)
+    cv.putText(image, 'Origin', (int(origin_pix[0, 0]+30), int(origin_pix[0, 1]-20)), font, 1.6, (0, 0, 255), 2)
     # draw on mm and pixel location at each screw
     pix_loc_from_origin_rounded = pix_loc_from_origin[:, :3]
     mm_locations_rounded = mm_locations[:, :3]
@@ -77,32 +77,32 @@ def mm_screw_location(pix_to_mm, origin_pix, image_location='images_taken/1lates
     for i in range(np.shape(pix_locations)[0]):
         cv.putText(image, str(i),
                    (int(pix_locations[i, 0]) - 50, int(pix_locations[i, 1]) - 30),
-                   font, 1.2, (50, 205, 50), 2)
+                   font, 1.2, (0, 255, 255), 2)    # default colour (50, 205, 50), 2)
         #cv.putText(image, str(direct_pix[i]),
         #           (int(pix_locations[i, 0]), int(pix_locations[i, 1]) - 50),
         #           font, 0.7, (100, 0, 255), 2)
-        cv.putText(image, str(direct_mm[i]),
-                   (int(pix_locations[i, 0]), int(pix_locations[i, 1]) - 25),
-                   font, 0.7, (0, 255, 255), 2)
+        #cv.putText(image, str(direct_mm[i]),
+        #           (int(pix_locations[i, 0]), int(pix_locations[i, 1]) - 25),
+        #           font, 0.7, (0, 255, 255), 2)
         #cv.putText(image, str(pix_loc_from_origin_rounded[i]),
         #           (int(pix_locations[i, 0]), int(pix_locations[i, 1]) - 10),
         #           font, 0.7, (255, 255, 255), 2)
-        cv.putText(image, str(mm_locations_rounded[i]), (int(pix_locations[i, 0]), int(pix_locations[i, 1]) + 15),
+        cv.putText(image, str(mm_locations_rounded[i]), (int(pix_locations[i, 0]), int(pix_locations[i, 1])-15),
                    font, 0.7, (0, 0, 255), 2)
 
     # color key
     cv.putText(image, text="KEY", org=(1600, 1450), fontFace=cv.FONT_HERSHEY_DUPLEX,
                fontScale=2, color=(0, 0, 0), thickness=3)
-    cv.putText(image, text="Screw number (start at 0)", org=(1600, 1500), fontFace=cv.FONT_HERSHEY_DUPLEX,
-               fontScale=1.5, color=(50, 205, 50), thickness=2)
-    cv.putText(image, text="Direct distance in pixels from origin", org=(1600, 1550), fontFace=cv.FONT_HERSHEY_DUPLEX,
-               fontScale=1.5, color=(100, 0, 255), thickness=2)
-    cv.putText(image, text="Direct distance in mm from origin", org=(1600, 1600), fontFace=cv.FONT_HERSHEY_DUPLEX,
+    cv.putText(image, text="Screw number (starts at 0)", org=(1600, 1500), fontFace=cv.FONT_HERSHEY_DUPLEX,
                fontScale=1.5, color=(0, 255, 255), thickness=2)
-    cv.putText(image, text="[X, y, r] in pixels from origin", org=(1600, 1650), fontFace=cv.FONT_HERSHEY_DUPLEX,
-               fontScale=1.5, color=(255, 255, 255), thickness=2)
-    cv.putText(image, text="[X, y, r] in mm from origin", org=(1600, 1700), fontFace=cv.FONT_HERSHEY_DUPLEX,
-               fontScale=1.5, color=(0, 0, 255), thickness=2)
+    #cv.putText(image, text="Direct distance in pixels from origin", org=(1600, 1550), fontFace=cv.FONT_HERSHEY_DUPLEX,
+    #           fontScale=1.5, color=(100, 0, 255), thickness=2)
+    #cv.putText(image, text="Direct distance in mm from origin", org=(1600, 1600), fontFace=cv.FONT_HERSHEY_DUPLEX,
+    #           fontScale=1.5, color=(0, 255, 255), thickness=2)
+    #cv.putText(image, text="[X, y, r] in pixels from origin", org=(1600, 1650), fontFace=cv.FONT_HERSHEY_DUPLEX,
+    #           fontScale=1.5, color=(255, 255, 255), thickness=2)
+    cv.putText(image, text="[X, y, r] in mm from origin", org=(1600, 1560), fontFace=cv.FONT_HERSHEY_DUPLEX,
+               fontScale=1.5, color=(0, 0, 255), thickness=2)  # was org=(1600, 1700)
 
     # save image
     cv.imwrite('images_processed/1screw_mm_output' + '.jpg', image)
@@ -111,7 +111,7 @@ def mm_screw_location(pix_to_mm, origin_pix, image_location='images_taken/1lates
 
 
 # loads image, pre-process it, apply hough circle detection
-def pixel_screw_location(dp=0.11, param1=23, param2=22, blue_t=276, green_t=103, red_t=55,
+def pixel_screw_location(dp=1.02, param1=33, param2=23, blue_t=245, green_t=111, red_t=58,
                          image_location='images_taken/1latest_image_from_camera'):
     """
     Screw location function for pixel coordinates.
