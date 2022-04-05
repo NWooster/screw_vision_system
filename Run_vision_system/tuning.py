@@ -115,14 +115,13 @@ def tune(iterations=100):
         red_t = random.randint(red_t_low, red_t_high)
 
         # iterate through images 1 to n (put n+1)
-        number_of_pics = 4
-        for n in range(1, number_of_pics):
+        number_of_pics = 10
+        for n in range(1, number_of_pics+1):
             current_image = 'phone_pic' + str(n)
-            print(current_image)
 
             # find pixel screw location
             pix_screw_locations = screw_location_tuning.pixel_screw_location(dp, param1, param2, blue_t, green_t, red_t,
-                                                                             picture=current_image)
+                                                                             picture=current_image, fast=1)
             # open ground truth .txt file
             ground_truths = np.loadtxt('images_processed/' + current_image + '/combined_screw_ground_truths.txt',
                                        delimiter=",")
@@ -241,10 +240,10 @@ def tune(iterations=100):
         plt.show()
 
     # output final images
-    for n in range(1, number_of_pics):
+    for n in range(1, number_of_pics+1):
         current_image = 'phone_pic' + str(n)
         pix_screw_locations = screw_location_tuning.pixel_screw_location(f_dp, f_param1, f_param2, f_blue, f_green,
-                                                                         f_red, picture=current_image)
+                                                                         f_red, picture=current_image, fast=0)
 
         # open ground truth .txt file
         ground_truths = np.loadtxt('images_processed/' + current_image + '/combined_screw_ground_truths.txt',
