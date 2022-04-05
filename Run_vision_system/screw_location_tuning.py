@@ -15,7 +15,7 @@ import math
 
 # loads image, pre-process it, apply hough circle detection
 def pixel_screw_location(dp, param1, param2, blue_t, green_t, red_t,
-                         picture):
+                         picture, fast=0):
     """
     Screw location function for pixel coordinates.
     """
@@ -123,27 +123,29 @@ def pixel_screw_location(dp, param1, param2, blue_t, green_t, red_t,
     # initialise final image
     final_image = initial_image
 
-    # draw the detected circles
-    if circles is not None:
-        # removes decimals
-        circles_draw = np.uint16(np.around(screw_locations))
-        # print('circles drawn:', circles_draw)
-        for i in circles_draw:
-            center = (i[0], i[1])
-            # circle center
-            cv.circle(final_image, center, 1, (0, 100, 100), 3)
-            # circle outline
-            radius = i[2]
-            # draws circles (r,b,g) colour
-            cv.circle(final_image, center, radius, (255, 0, 255), 3)
+    # if wanting to print image
+    if fast == 0:
+        # draw the detected circles
+        if circles is not None:
+            # removes decimals
+            circles_draw = np.uint16(np.around(screw_locations))
+            # print('circles drawn:', circles_draw)
+            for i in circles_draw:
+                center = (i[0], i[1])
+                # circle center
+                cv.circle(final_image, center, 1, (0, 100, 100), 3)
+                # circle outline
+                radius = i[2]
+                # draws circles (r,b,g) colour
+                cv.circle(final_image, center, radius, (255, 0, 255), 3)
 
-    # call imported resize image function specify required width (default 600)
-    # resized_image = resize(final_image, 600)
-    # show resized image
-    # cv.imshow("detected screws", resized_image)
+        # call imported resize image function specify required width (default 600)
+        # resized_image = resize(final_image, 600)
+        # show resized image
+        # cv.imshow("detected screws", resized_image)
 
-    # save image as filename.jpeg
-    cv.imwrite('images_processed/' + picture + '/' + 'screw_pixel_output.jpg', final_image)
+        # save image as filename.jpeg
+        cv.imwrite('images_processed/' + picture + '/' + 'screw_pixel_output.jpg', final_image)
 
     return screw_locations
 
