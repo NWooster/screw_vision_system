@@ -146,7 +146,8 @@ def total_error(estimate, ground_truth):
     return no_fp, no_fn, no_correct, e_loc, e_total
 
 
-def draw_error(estimate, ground_truth, image_location='images_taken/1latest_image_from_camera.jpg'):
+def draw_error(estimate, ground_truth, image_location='images_taken/1latest_image_from_camera.jpg',
+               save_image='images_processed/error' + '.jpg'):
     # select centres only for pixel location estimates
     screw_centres_found = estimate[:, :2]
 
@@ -158,48 +159,52 @@ def draw_error(estimate, ground_truth, image_location='images_taken/1latest_imag
 
     # draw false positives (wrongly labelled screws) as yellow circle
     false_pos_loc = np.delete(estimate, np.where(false_pos[:, 2] == 0)[0], 0)  # find false pos locations & radii
-    for i in range(np.shape(false_pos_loc)[0]):
+    no_of_fp = np.shape(false_pos_loc)[0]
+    for i in range(no_of_fp):
         image = cv.circle(image, np.uint16(false_pos_loc[i, (0, 1)]), radius=np.uint16(false_pos_loc[i, 2]),
                           color=(0, 255, 255), thickness=4)
 
     # draw false negatives (missed screws) as red circle
     false_neg_loc = np.delete(false_neg, np.where(false_neg[:, 2] == 0)[0], 0)  # find false neg locations
-    for i in range(np.shape(false_neg_loc)[0]):
+    no_of_fn = np.shape(false_neg_loc)[0]
+    for i in range(no_of_fn):
         image = cv.circle(image, np.uint16(false_neg_loc[i, (0, 1)]), radius=23,
                           color=(0, 0, 255), thickness=4)
 
     # draw correctly found estimates as pink circle
     correct_found_loc = np.delete(estimate, np.where(false_pos[:, 2] == 1)[0], 0)  # find locations & radii
-    for i in range(np.shape(correct_found_loc)[0]):
+    no_of_correct = np.shape(correct_found_loc)[0]
+    for i in range(no_of_correct):
         image = cv.circle(image, np.uint16(correct_found_loc[i, (0, 1)]), radius=np.uint16(correct_found_loc[i, 2]),
                           color=(255, 0, 255), thickness=3)
 
-    # draw correctly found ground truths as blue dot
+    # draw ground truths as green dot
     found_gt_loc = false_neg
-    for i in range(np.shape(found_gt_loc)[0]):
+    no_of_gt = np.shape(found_gt_loc)[0]
+    for i in range(no_of_gt):
         image = cv.circle(image, np.uint16(found_gt_loc[i, (0, 1)]), radius=7,
                           color=(0, 255, 0), thickness=-1)
 
     # color key
     cv.putText(image, text="KEY", org=(1400, 1450), fontFace=cv.FONT_HERSHEY_DUPLEX,
                fontScale=4, color=(0, 0, 0), thickness=3)
-    cv.putText(image, text="False positive screws", org=(1400, 1530), fontFace=cv.FONT_HERSHEY_DUPLEX,
+    cv.putText(image, text=str(no_of_fp) + " False positive screws", org=(1400, 1530), fontFace=cv.FONT_HERSHEY_DUPLEX,
                fontScale=3, color=(0, 255, 255), thickness=2)
-    cv.putText(image, text="Screws not found", org=(1400, 1600), fontFace=cv.FONT_HERSHEY_DUPLEX,
+    cv.putText(image, text=str(no_of_fn) + " Screws not found", org=(1400, 1600), fontFace=cv.FONT_HERSHEY_DUPLEX,
                fontScale=3, color=(0, 0, 255), thickness=2)
-    cv.putText(image, text="Screws correctly found", org=(1400, 1670), fontFace=cv.FONT_HERSHEY_DUPLEX,
+    cv.putText(image, text=str(no_of_correct) + " Screws correctly found", org=(1400, 1670), fontFace=cv.FONT_HERSHEY_DUPLEX,
                fontScale=3, color=(255, 0, 255), thickness=2)
-    cv.putText(image, text="Ground truths", org=(1400, 1740), fontFace=cv.FONT_HERSHEY_DUPLEX,
+    cv.putText(image, text=str(no_of_gt) + " Ground truths", org=(1400, 1740), fontFace=cv.FONT_HERSHEY_DUPLEX,
                fontScale=3, color=(0, 255, 0), thickness=2)
 
     # resize and show image
-    resized_image = resize_to_fit_screen.resize(image, 1000)
-    cv.imshow("screw error", resized_image)
+    #resized_image = resize_to_fit_screen.resize(image, 1000)
+    #cv.imshow("screw error", resized_image)
 
     # save image as filename.jpeg
-    cv.imwrite('images_processed/error' + '.jpg', image)
+    cv.imwrite(save_image, image)
 
-    cv.waitKey(0)  # wait till user exits or presses q
+    #cv.waitKey(0)  # wait till user exits or presses q
 
     return
 
