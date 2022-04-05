@@ -115,7 +115,7 @@ def tune(iterations=100):
         red_t = random.randint(red_t_low, red_t_high)
 
         # iterate through images 1 to n (put n+1)
-        number_of_pics = 10
+        number_of_pics = 15
         for n in range(1, number_of_pics+1):
             current_image = 'phone_pic' + str(n)
 
@@ -180,7 +180,7 @@ def tune(iterations=100):
         fp_array.append(f_fp)
         fn_array.append(f_fn)
         pix_loc_err.append(f_e_loc)
-        print(i, 'iterations completed')
+        print(i+1, 'iterations completed')
 
     print('There are on average', f_fp, 'screws falsely labelled,', f_fn, 'screws that were missed and',
           f_correct, 'correctly found.')
@@ -259,4 +259,4 @@ def average(list):
 
 
 if __name__ == "__main__":
-    tune(iterations=10)
+    tune(iterations=3000)
