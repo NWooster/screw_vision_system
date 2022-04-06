@@ -159,7 +159,7 @@ def tune(iterations=100):
         # red_t_bottom = 0
 
         # iterate through images 1 to n (put n+1)
-        number_of_pics = 15
+        number_of_pics = 1
         for n in range(1, number_of_pics + 1):
             current_image = 'phone_pic' + str(n)
 
@@ -230,7 +230,7 @@ def tune(iterations=100):
         fp_array.append(f_fp)
         fn_array.append(f_fn)
         pix_loc_err.append(f_e_loc)
-        print(i + 1, 'iterations completed')
+        print(i + 1, 'iterations completed', '| current error: ', f_error)
 
     print('There are on average', f_fp, 'screws falsely labelled,', f_fn, 'screws that were missed and',
           f_correct, 'correctly found.')
@@ -314,4 +314,4 @@ def average(list):
 
 
 if __name__ == "__main__":
-    tune(iterations=5)
+    tune(iterations=2000)
