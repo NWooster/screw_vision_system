@@ -93,10 +93,12 @@ def pixel_screw_location(dp, param1, param2, blue_t_upper, blue_t_bottom, green_
 
             # catch error of pixel being out of bounds (not sure why this error happens as pixel 1944x2592 shld exist)
             if pix_check_y > 1943:
+                #print('ERROR IN Y PIXEL LOCATION')
+                #print('pixel out of 1944 bound:', pix_check_y)
                 pix_check_y = 1943
-                print('ERROR IN Y PIXEL LOCATION')
             if pix_check_x > 2591:
-                print('ERROR IN X PIXEL LOCATION')
+                #print('ERROR IN X PIXEL LOCATION')
+                #print('pixel out of 2592 bound:', pix_check_x)
                 pix_check_x = 2591
 
             # find colours
