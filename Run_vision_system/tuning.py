@@ -91,6 +91,21 @@ def tune(iterations=100):
             red_t_low = round(f_red - f_red * range_mult)
             red_t_high = round(f_red + f_red * range_mult)
 
+        # start iteration 1 at around 70 error (better for graph)
+        if iterations == 0:
+            dp_low = 1.6
+            dp_high = 1.61
+            param1_low = 26
+            param1_high = 27
+            param2_low = 45
+            param2_high = 46
+            blue_t_low = 58
+            blue_t_high = 59
+            green_t_low = 99
+            green_t_high = 100
+            red_t_low = 80
+            red_t_high = 81
+
         # just for re-do final graph (DELETE)
         #    if i > iterations-1000:
         #        dp_low = 1.6
@@ -259,4 +274,4 @@ def average(list):
 
 
 if __name__ == "__main__":
-    tune(iterations=3000)
+    tune(iterations=2)
