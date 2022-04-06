@@ -53,6 +53,10 @@ def tune(iterations=100, no_of_pics=10):
     f_fp = no_fp
     f_fn = no_fn
     f_correct = no_correct
+    no_correct_max = no_correct
+    no_correct_min = no_correct
+    f_correct_max = no_correct_max
+    f_correct_min = no_correct_min
     f_e_loc = e_loc
 
     f_blue_upper = 255
@@ -78,17 +82,17 @@ def tune(iterations=100, no_of_pics=10):
             # blue_t_upper_low = 10  # not needed as specified by the lowest upper value
             blue_t_upper_high = 255  # default 255
             blue_t_bottom_low = 0  # default 0
-            blue_t_bottom_high = 250  # default 250
+            blue_t_bottom_high = 200  # default 250
 
             # green_t_upper_low = 10  # default 10
             green_t_upper_high = 255  # default 255
             green_t_bottom_low = 0  # default 0
-            green_t_bottom_high = 250  # default 250
+            green_t_bottom_high = 200  # default 250
 
             # red_t_upper_low = 10  # default 10
             red_t_upper_high = 255  # default 255
             red_t_bottom_low = 0  # default 0
-            red_t_bottom_high = 250  # default 250
+            red_t_bottom_high = 200  # default 250
 
         elif i >= iterations / 2:
             # refined parameter ranges
@@ -148,11 +152,11 @@ def tune(iterations=100, no_of_pics=10):
             red_t_upper = 255
             red_t_bottom = 80
 
-        # just for re-do final graph (DELETE)
-        # if i > iterations-1000:
-        # dp = 1.6
-        # param1 = 27
-        # param2 = 45
+        # if wanting to only change certain params alter this and iteration it occurs
+        # if i > -1:
+        #    dp = 1.83
+        #    param1 = 9
+        #    param2 = 66
         # blue_t_upper = 255
         # blue_t_bottom = 0
         # green_t_upper = 255
@@ -200,6 +204,8 @@ def tune(iterations=100, no_of_pics=10):
             no_fp = average(fp_array_pics)
             no_fn = average(fn_array_pics)
             no_correct = average(no_correct_array_pics)
+            no_correct_max = max(no_correct_array_pics)
+            no_correct_min = min(no_correct_array_pics)
             e_loc = average(e_loc_array_pics)
 
         # empty arrays to store info on each pic within 1 iteration
@@ -225,6 +231,8 @@ def tune(iterations=100, no_of_pics=10):
             f_fp = no_fp
             f_fn = no_fn
             f_correct = no_correct
+            f_correct_max = no_correct_max
+            f_correct_min = no_correct_min
             f_e_loc = e_loc
 
         # store past errors results to plot
@@ -234,9 +242,14 @@ def tune(iterations=100, no_of_pics=10):
         pix_loc_err.append(f_e_loc)
         print(i + 1, 'iterations completed',
               '| error:', f_error, 'correct:' + str(f_correct), 'fp:' + str(f_fp), 'fn:' + str(f_fn))
+        print('b_upper:', f_blue_upper, 'b_bottom:', f_blue_bottom,
+              'g_upper:', f_green_upper, 'g_bottom:', f_green_bottom,
+              'r_upper:', f_red_upper, 'r_bottom:', f_red_bottom)
+        print('')
 
     print('There are on average', f_fp, 'screws falsely labelled,', f_fn, 'screws that were missed and',
           f_correct, 'correctly found.')
+    print('The number of correctly found screws ranges from', f_correct_min, 'to', f_correct_max, '.')
     print('The average location error of correctly found screws is:', f_e_loc, 'pixels.')
     print('')
     print('final error:', f_error)
@@ -317,4 +330,4 @@ def average(list):
 
 
 if __name__ == "__main__":
-    tune(iterations=3000, no_of_pics=15)
+    tune(iterations=6, no_of_pics=15)
