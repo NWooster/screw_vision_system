@@ -19,7 +19,7 @@ import screw_location_tuning
 import error
 
 
-def tune(iterations=100):
+def tune(iterations=100, no_of_pics=10):
     # initialise values and arrays:
 
     # empty arrays to store info on each pic within 1 iteration
@@ -67,32 +67,32 @@ def tune(iterations=100):
         # refine parameter ranges based off iteration number
         if i < iterations / 2:
             # parameter ranges
-            dp_low = 0.01  # default 0.01
-            dp_high = 2.5
-            param1_low = 10
-            param1_high = 140
-            param2_low = 10
-            param2_high = 120
+            dp_low = 1  # default 0.01
+            dp_high = 2  # default 2.5
+            param1_low = 5  # default 10
+            param1_high = 50  # default 140
+            param2_low = 10  # default 10
+            param2_high = 80  # default 120
 
-            # for colour bottom must be less than upper so t_bottom_high is given by t_upper_low-1
-            blue_t_upper_low = 10
-            blue_t_upper_high = 255
-            blue_t_bottom_low = 0
-            # blue_t_bottom_high = 255  # not needed as specified by the lowest upper value
+            # for colour upper must be greater than bottom so t_upper_low is given by t_bottom+2
+            # blue_t_upper_low = 10  # not needed as specified by the lowest upper value
+            blue_t_upper_high = 255  # default 255
+            blue_t_bottom_low = 0  # default 0
+            blue_t_bottom_high = 255
 
-            green_t_upper_low = 10
-            green_t_upper_high = 255
-            green_t_bottom_low = 0
-            # green_t_bottom_high = 255
+            # green_t_upper_low = 10  # default 10
+            green_t_upper_high = 255  # default 255
+            green_t_bottom_low = 0  # default 0
+            green_t_bottom_high = 255
 
-            red_t_upper_low = 10
-            red_t_upper_high = 255
-            red_t_bottom_low = 0
-            # red_t_bottom_high = 255
+            # red_t_upper_low = 10  # default 10
+            red_t_upper_high = 255  # default 255
+            red_t_bottom_low = 0  # default 0
+            red_t_bottom_high = 255
 
         elif i >= iterations / 2:
             # refined parameter ranges
-            range_mult = 0.25  # % change from current final parameter (range will be double this x current value)
+            range_mult = 0.25  # % 0.25 change from current final parameter (range will be double this x current value)
             dp_low = round(f_dp - f_dp * range_mult, 2)
             dp_high = round(f_dp + f_dp * range_mult, 2)
             param1_low = round(f_param1 - f_param1 * range_mult)
@@ -100,51 +100,51 @@ def tune(iterations=100):
             param2_low = round(f_param2 - f_param2 * range_mult)
             param2_high = round(f_param2 + f_param2 * range_mult)
 
-            blue_t_upper_low = round(f_blue_upper - f_blue_upper * range_mult)
+            # blue_t_upper_low = round(f_blue_upper - f_blue_upper * range_mult) # mot needed as
+            # specified by bottom
             blue_t_upper_high = round(f_blue_upper + f_blue_upper * range_mult)
             blue_t_bottom_low = round(f_blue_bottom - f_blue_bottom * range_mult)
-            # blue_t_bottom_high = round(f_blue_bottom + f_blue_bottom * range_mult) # not needed as
-            # specified by the lowest upper value
+            blue_t_bottom_high = round(f_blue_bottom + f_blue_bottom * range_mult)
 
-            green_t_upper_low = round(f_green_upper - f_green_upper * range_mult)
+            # green_t_upper_low = round(f_green_upper - f_green_upper * range_mult)
             green_t_upper_high = round(f_green_upper + f_green_upper * range_mult)
             green_t_bottom_low = round(f_green_bottom - f_green_bottom * range_mult)
-            # green_t_bottom_high = round(f_green_bottom + f_green_bottom * range_mult)
+            green_t_bottom_high = round(f_green_bottom + f_green_bottom * range_mult)
 
-            red_t_upper_low = round(f_red_upper - f_red_upper * range_mult)
+            # red_t_upper_low = round(f_red_upper - f_red_upper * range_mult)
             red_t_upper_high = round(f_red_upper + f_red_upper * range_mult)
             red_t_bottom_low = round(f_red_bottom - f_red_bottom * range_mult)
-            # red_t_bottom_high = round(f_red_bottom + f_red_bottom * range_mult)
+            red_t_bottom_high = round(f_red_bottom + f_red_bottom * range_mult)
 
         # make parameters random number in given range
         dp = round(random.uniform(dp_low, dp_high), 2)
         param1 = random.randint(param1_low, param1_high)
         param2 = random.randint(param2_low, param2_high)
 
-        # for colour bottom must be less than upper so t_bottom_high is given by t_upper_low-1
-        blue_t_upper = random.randint(blue_t_upper_low, blue_t_upper_high)
-        blue_t_bottom_high = blue_t_upper_low - 1
+        # for colour upper must be greater than bottom so t_upper_low is given by t_bottom+2
         blue_t_bottom = random.randint(blue_t_bottom_low, blue_t_bottom_high)
+        blue_t_upper_low = blue_t_bottom + 2
+        blue_t_upper = random.randint(blue_t_upper_low, blue_t_upper_high)
 
-        green_t_upper = random.randint(green_t_upper_low, green_t_upper_high)
-        green_t_bottom_high = green_t_upper_low - 1
         green_t_bottom = random.randint(green_t_bottom_low, green_t_bottom_high)
+        green_t_upper_low = green_t_bottom + 2
+        green_t_upper = random.randint(green_t_upper_low, green_t_upper_high)
 
-        red_t_upper = random.randint(red_t_upper_low, red_t_upper_high)
-        red_t_bottom_high = red_t_upper_low - 1
         red_t_bottom = random.randint(red_t_bottom_low, red_t_bottom_high)
+        red_t_upper_low = red_t_bottom + 2
+        red_t_upper = random.randint(red_t_upper_low, red_t_upper_high)
 
         # start iteration 1 at around 70 error (better for graph)
-        if iterations == 0:
-            dp = 1.6
-            param1 = 27
-            param2 = 45
+        if i == 0:
+            dp = 1.42
+            param1 = 22  # put to 22 for best, 50 for 70-80 error
+            param2 = 43  # put to 43 for best, 31 for 70-80 error
             blue_t_upper = 255
-            blue_t_bottom = 0
+            blue_t_bottom = 59
             green_t_upper = 255
-            green_t_bottom = 0
+            green_t_bottom = 98
             red_t_upper = 255
-            red_t_bottom = 0
+            red_t_bottom = 80
 
         # just for re-do final graph (DELETE)
         # if i > iterations-1000:
@@ -159,7 +159,7 @@ def tune(iterations=100):
         # red_t_bottom = 0
 
         # iterate through images 1 to n (put n+1)
-        number_of_pics = 10
+        number_of_pics = no_of_pics
         for n in range(1, number_of_pics + 1):
             current_image = 'phone_pic' + str(n)
 
@@ -315,4 +315,4 @@ def average(list):
 
 
 if __name__ == "__main__":
-    tune(iterations=5000)
+    tune(iterations=3, no_of_pics=15)
