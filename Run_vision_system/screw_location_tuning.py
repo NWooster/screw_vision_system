@@ -14,8 +14,8 @@ import math
 
 
 # loads image, pre-process it, apply hough circle detection
-def pixel_screw_location(dp, param1, param2, blue_t, green_t, red_t,
-                         picture, fast=0):
+def pixel_screw_location(dp, param1, param2, blue_t_upper, blue_t_bottom, green_t_upper, green_t_bottom,
+                         red_t_upper, red_t_bottom, picture, fast=0):
     """
     Screw location function for pixel coordinates.
     """
@@ -79,10 +79,6 @@ def pixel_screw_location(dp, param1, param2, blue_t, green_t, red_t,
     # flag to run optimise parts
     optimised = 1
 
-    blue_thresh = blue_t
-    green_thresh = green_t
-    red_thresh = red_t
-
     # check if wanting to colour optimise and screw array is not empty
     if optimised == 1 and screw_locations.size != 1:
 
@@ -110,8 +106,9 @@ def pixel_screw_location(dp, param1, param2, blue_t, green_t, red_t,
 
             # change false pos flag
             # colour (default is 'and' statements)
-            if blue < blue_thresh and green < green_thresh and red < red_thresh:
-                screw_locations[i, 3] = 1
+            screw_locations[i, 3] = 1  # set them all as false pos
+            if blue_t_bottom < blue < blue_t_upper and green_t_bottom < green < green_t_upper and red_t_bottom < red < red_t_upper:
+                screw_locations[i, 3] = 0  # if in this colour bound set as a screw
             # y location not on phone
             if pix_check_y > 1290:
                 screw_locations[i, 3] = 1

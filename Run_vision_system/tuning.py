@@ -54,9 +54,13 @@ def tune(iterations=100):
     f_fn = no_fn
     f_correct = no_correct
     f_e_loc = e_loc
-    f_blue = 0
-    f_green = 0
-    f_red = 0
+
+    f_blue_upper = 255
+    f_blue_bottom = 0
+    f_green_upper = 255
+    f_green_bottom = 0
+    f_red_upper = 255
+    f_red_bottom = 0
 
     for i in range(iterations):
 
@@ -69,12 +73,23 @@ def tune(iterations=100):
             param1_high = 140
             param2_low = 10
             param2_high = 120
-            blue_t_low = 0
-            blue_t_high = 255
-            green_t_low = 0
-            green_t_high = 255
-            red_t_low = 0
-            red_t_high = 255
+
+            # for colour bottom must be less than upper so t_bottom_high is given by t_upper_low-1
+            blue_t_upper_low = 10
+            blue_t_upper_high = 255
+            blue_t_bottom_low = 0
+            # blue_t_bottom_high = 255  # not needed as specified by the lowest upper value
+
+            green_t_upper_low = 10
+            green_t_upper_high = 255
+            green_t_bottom_low = 0
+            # green_t_bottom_high = 255
+
+            red_t_upper_low = 10
+            red_t_upper_high = 255
+            red_t_bottom_low = 0
+            # red_t_bottom_high = 255
+
         elif i >= iterations / 2:
             # refined parameter ranges
             range_mult = 0.25  # % change from current final parameter (range will be double this x current value)
@@ -84,59 +99,76 @@ def tune(iterations=100):
             param1_high = round(f_param1 + f_param1 * range_mult)
             param2_low = round(f_param2 - f_param2 * range_mult)
             param2_high = round(f_param2 + f_param2 * range_mult)
-            blue_t_low = round(f_blue - f_blue * range_mult)
-            blue_t_high = round(f_blue + f_blue * range_mult)
-            green_t_low = round(f_green - f_green * range_mult)
-            green_t_high = round(f_green + f_green * range_mult)
-            red_t_low = round(f_red - f_red * range_mult)
-            red_t_high = round(f_red + f_red * range_mult)
 
-        # start iteration 1 at around 70 error (better for graph)
-        if iterations == 0:
-            dp_low = 1.6
-            dp_high = 1.61
-            param1_low = 26
-            param1_high = 27
-            param2_low = 45
-            param2_high = 46
-            blue_t_low = 58
-            blue_t_high = 59
-            green_t_low = 99
-            green_t_high = 100
-            red_t_low = 80
-            red_t_high = 81
+            blue_t_upper_low = round(f_blue_upper - f_blue_upper * range_mult)
+            blue_t_upper_high = round(f_blue_upper + f_blue_upper * range_mult)
+            blue_t_bottom_low = round(f_blue_bottom - f_blue_bottom * range_mult)
+            # blue_t_bottom_high = round(f_blue_bottom + f_blue_bottom * range_mult) # not needed as
+            # specified by the lowest upper value
 
-        # just for re-do final graph (DELETE)
-        #    if i > iterations-1000:
-        #        dp_low = 1.6
-        #        dp_high = 1.61
-        #        param1_low = 45
-        #        param1_high = 46
-        #        param2_low = 45
-        #        param2_high = 46
-        #        blue_t_low = 289
-        #        blue_t_high = 290
-        #        green_t_low = 53
-        #        green_t_high = 54
-        #        red_t_low = 67
-        #        red_t_high = 68
+            green_t_upper_low = round(f_green_upper - f_green_upper * range_mult)
+            green_t_upper_high = round(f_green_upper + f_green_upper * range_mult)
+            green_t_bottom_low = round(f_green_bottom - f_green_bottom * range_mult)
+            # green_t_bottom_high = round(f_green_bottom + f_green_bottom * range_mult)
+
+            red_t_upper_low = round(f_red_upper - f_red_upper * range_mult)
+            red_t_upper_high = round(f_red_upper + f_red_upper * range_mult)
+            red_t_bottom_low = round(f_red_bottom - f_red_bottom * range_mult)
+            # red_t_bottom_high = round(f_red_bottom + f_red_bottom * range_mult)
 
         # make parameters random number in given range
         dp = round(random.uniform(dp_low, dp_high), 2)
         param1 = random.randint(param1_low, param1_high)
         param2 = random.randint(param2_low, param2_high)
-        blue_t = random.randint(blue_t_low, blue_t_high)
-        green_t = random.randint(green_t_low, green_t_high)
-        red_t = random.randint(red_t_low, red_t_high)
+
+        # for colour bottom must be less than upper so t_bottom_high is given by t_upper_low-1
+        blue_t_upper = random.randint(blue_t_upper_low, blue_t_upper_high)
+        blue_t_bottom_high = blue_t_upper_low - 1
+        blue_t_bottom = random.randint(blue_t_bottom_low, blue_t_bottom_high)
+
+        green_t_upper = random.randint(green_t_upper_low, green_t_upper_high)
+        green_t_bottom_high = green_t_upper_low - 1
+        green_t_bottom = random.randint(green_t_bottom_low, green_t_bottom_high)
+
+        red_t_upper = random.randint(red_t_upper_low, red_t_upper_high)
+        red_t_bottom_high = red_t_upper_low - 1
+        red_t_bottom = random.randint(red_t_bottom_low, red_t_bottom_high)
+
+        # start iteration 1 at around 70 error (better for graph)
+        if iterations == 0:
+            dp = 1.6
+            param1 = 27
+            param2 = 45
+            blue_t_upper = 255
+            blue_t_bottom = 0
+            green_t_upper = 255
+            green_t_bottom = 0
+            red_t_upper = 255
+            red_t_bottom = 0
+
+        # just for re-do final graph (DELETE)
+        # if i > iterations-1000:
+        # dp = 1.6
+        # param1 = 27
+        # param2 = 45
+        # blue_t_upper = 255
+        # blue_t_bottom = 0
+        # green_t_upper = 255
+        # green_t_bottom = 0
+        # red_t_upper = 255
+        # red_t_bottom = 0
 
         # iterate through images 1 to n (put n+1)
         number_of_pics = 15
-        for n in range(1, number_of_pics+1):
+        for n in range(1, number_of_pics + 1):
             current_image = 'phone_pic' + str(n)
 
             # find pixel screw location
-            pix_screw_locations = screw_location_tuning.pixel_screw_location(dp, param1, param2, blue_t, green_t, red_t,
-                                                                             picture=current_image, fast=1)
+            pix_screw_locations = screw_location_tuning.pixel_screw_location(dp, param1, param2, blue_t_upper,
+                                                                             blue_t_bottom, green_t_upper,
+                                                                             green_t_bottom, red_t_upper,
+                                                                             red_t_bottom, picture=current_image,
+                                                                             fast=1)
             # open ground truth .txt file
             ground_truths = np.loadtxt('images_processed/' + current_image + '/combined_screw_ground_truths.txt',
                                        delimiter=",")
@@ -180,9 +212,12 @@ def tune(iterations=100):
             f_dp = dp
             f_param1 = param1
             f_param2 = param2
-            f_blue = blue_t
-            f_green = green_t
-            f_red = red_t
+            f_blue_upper = blue_t_upper
+            f_blue_bottom = blue_t_bottom
+            f_green_upper = green_t_upper
+            f_green_bottom = green_t_bottom
+            f_red_upper = red_t_upper
+            f_red_bottom = red_t_bottom
 
             f_error = e_total
             f_fp = no_fp
@@ -195,7 +230,7 @@ def tune(iterations=100):
         fp_array.append(f_fp)
         fn_array.append(f_fn)
         pix_loc_err.append(f_e_loc)
-        print(i+1, 'iterations completed')
+        print(i + 1, 'iterations completed')
 
     print('There are on average', f_fp, 'screws falsely labelled,', f_fn, 'screws that were missed and',
           f_correct, 'correctly found.')
@@ -204,7 +239,9 @@ def tune(iterations=100):
     print('final error:', f_error)
     print('')
     print('optimised parameters: dp =', f_dp, '  param1 =', f_param1, '  param2=', f_param2,
-          ' blue=', f_blue, ' green=', f_green, ' red=', f_red)
+          ' blue_upper=', f_blue_upper, ' blue_bottom=', f_blue_bottom,
+          ' green_upper=', f_green_upper, ' green_bottom=', f_green_bottom,
+          ' red_upper=', f_red_upper, ' red_bottom=', f_red_bottom)
 
     plot_type = 1  # change how plot outputs (1or2)
 
@@ -255,10 +292,13 @@ def tune(iterations=100):
         plt.show()
 
     # output final images
-    for n in range(1, number_of_pics+1):
+    for n in range(1, number_of_pics + 1):
         current_image = 'phone_pic' + str(n)
-        pix_screw_locations = screw_location_tuning.pixel_screw_location(f_dp, f_param1, f_param2, f_blue, f_green,
-                                                                         f_red, picture=current_image, fast=0)
+        pix_screw_locations = screw_location_tuning.pixel_screw_location(f_dp, f_param1, f_param2,
+                                                                         f_blue_upper, f_blue_bottom,
+                                                                         f_green_upper, f_green_bottom,
+                                                                         f_red_upper, f_red_bottom,
+                                                                         picture=current_image, fast=0)
 
         # open ground truth .txt file
         ground_truths = np.loadtxt('images_processed/' + current_image + '/combined_screw_ground_truths.txt',
@@ -274,4 +314,4 @@ def average(list):
 
 
 if __name__ == "__main__":
-    tune(iterations=2)
+    tune(iterations=5)
