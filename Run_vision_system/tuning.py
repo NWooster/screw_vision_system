@@ -67,7 +67,7 @@ def tune(iterations=100):
         # refine parameter ranges based off iteration number
         if i < iterations / 2:
             # parameter ranges
-            dp_low = 0.01
+            dp_low = 0.01  # default 0.01
             dp_high = 2.5
             param1_low = 10
             param1_high = 140
@@ -159,7 +159,7 @@ def tune(iterations=100):
         # red_t_bottom = 0
 
         # iterate through images 1 to n (put n+1)
-        number_of_pics = 1
+        number_of_pics = 10
         for n in range(1, number_of_pics + 1):
             current_image = 'phone_pic' + str(n)
 
@@ -230,7 +230,8 @@ def tune(iterations=100):
         fp_array.append(f_fp)
         fn_array.append(f_fn)
         pix_loc_err.append(f_e_loc)
-        print(i + 1, 'iterations completed', '| current error: ', f_error)
+        print(i + 1, 'iterations completed',
+              '| error:', f_error, 'correct:' + str(f_correct), 'fp:' + str(f_fp), 'fn:' + str(f_fn))
 
     print('There are on average', f_fp, 'screws falsely labelled,', f_fn, 'screws that were missed and',
           f_correct, 'correctly found.')
@@ -314,4 +315,4 @@ def average(list):
 
 
 if __name__ == "__main__":
-    tune(iterations=2000)
+    tune(iterations=5000)
