@@ -106,9 +106,8 @@ def pixel_screw_location(dp, param1, param2, blue_t_upper, blue_t_bottom, green_
 
             # change false pos flag
             # colour (default is 'and' statements)
-            screw_locations[i, 3] = 1  # set them all as false pos
-            if blue_t_bottom < blue < blue_t_upper and green_t_bottom < green < green_t_upper and red_t_bottom < red < red_t_upper:
-                screw_locations[i, 3] = 0  # if in this colour bound set as a screw
+            if (blue < blue_t_bottom or blue > blue_t_upper) and (green < green_t_bottom or green > green_t_upper) and (red < red_t_bottom or red > red_t_upper):
+                screw_locations[i, 3] = 1  # if in this colour bound set as fp
             # y location not on phone
             if pix_check_y > 1290:
                 screw_locations[i, 3] = 1
