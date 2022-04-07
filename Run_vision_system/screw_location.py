@@ -111,8 +111,8 @@ def mm_screw_location(pix_to_mm, origin_pix, image_location='images_taken/1lates
 
 
 # loads image, pre-process it, apply hough circle detection
-def pixel_screw_location(dp=1.02, param1=33, param2=23, blue_t_upper=255, blue_t_bottom=0, green_t_upper=255,
-                         green_t_bottom=0, red_t_upper=255, red_t_bottom=0,
+def pixel_screw_location(dp=1.42, param1=22, param2=43, blue_t_upper=255, blue_t_bottom=59, green_t_upper=255,
+                         green_t_bottom=98, red_t_upper=255, red_t_bottom=80,
                          image_location='images_taken/1latest_image_from_camera'):
     """
     Screw location function for pixel coordinates.
