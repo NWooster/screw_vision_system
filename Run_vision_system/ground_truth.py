@@ -38,8 +38,15 @@ side_of_image = "right"
 
 # image path
 # filename = 'images_taken/1latest_image_from_camera.jpg'
-picture = 'phone_pic'
-filename = str('images_taken/ToTune/' + picture + '.jpg')
+
+## tuning set
+#picture = 'phone_pic'
+#filename = str('images_taken/ToTune/' + picture + '.jpg')
+
+## testing set
+picture = 'phone_picTest10'
+filename = str('images_taken/ToTest/' + picture + '.jpg')
+
 print(filename)
 img = cv.imread(cv.samples.findFile(filename), cv.IMREAD_COLOR)
 
@@ -81,7 +88,10 @@ cv.waitKey(0)  # wait till user exits or presses q
 # save the pixel locations to .txt file
 screw_ground_truths = np.array(pixel_loc)
 print(screw_ground_truths)
-np.savetxt('images_processed/' + picture + '/' + side_of_image + "_side_screw_ground_truths.txt", screw_ground_truths,
-           fmt='%g', delimiter=",")
+
+## tuning set
+#np.savetxt('images_processed/' + picture + '/' + side_of_image + "_side_screw_ground_truths.txt", screw_ground_truths, fmt='%g', delimiter=",")
+## testing set
+np.savetxt('images_processed/TestSet/' + picture + '/' + side_of_image + "_side_screw_ground_truths.txt", screw_ground_truths, fmt='%g', delimiter=",")
 
 cv.destroyAllWindows()

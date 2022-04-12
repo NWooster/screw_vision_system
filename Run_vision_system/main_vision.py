@@ -26,7 +26,7 @@ def main_vision():
     nathan_webcam = 1
     zara_webcam = 0
 
-    #take_picture.take_picture(nathan_webcam, 10)  # take image from webcam (camera 1) with specified autofocus time
+    take_picture.take_picture(nathan_webcam, 10)  # take image from webcam (camera 1) with specified autofocus time
 
     # find pixel/mm ratio
     pix_to_mm, tl_corner_pix = calibrate_camera.calibrate_camera(image_location='images_taken/'
