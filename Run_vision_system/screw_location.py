@@ -113,7 +113,7 @@ def mm_screw_location(pix_to_mm, origin_pix, image_location='images_taken/1lates
 # loads image, pre-process it, apply hough circle detection
 def pixel_screw_location(dp=1.42, param1=22, param2=43, blue_t_upper=255, blue_t_bottom=59, green_t_upper=255,
                          green_t_bottom=98, red_t_upper=255, red_t_bottom=80,
-                         image_location='images_taken/1latest_image_from_camera'):
+                         image_location='images_taken/1latest_image_from_camera.jpg'):
     """
     Screw location function for pixel coordinates.
     """
@@ -249,9 +249,13 @@ def distance(x1, y1, x2, y2):
 
 
 if __name__ == "__main__":
-    pix_to_mm, tl_corner_pix, = calibrate_camera.calibrate_camera(image_location='images_taken/'
-                                                                                 '1latest_image_from_'
-                                                                                 'camera.jpg', mm_dist=80)
+    #pix_to_mm, tl_corner_pix, = calibrate_camera.calibrate_camera(image_location='images_taken/'
+                                                                                # '1latest_image_from_'
+                                                                                # 'camera.jpg', mm_dist=80)
+
+    # just the screw pixel function (bad params)
+    screw_pix_loca = pixel_screw_location(dp=1.55, param1=20, param2=43, blue_t_upper=255, blue_t_bottom=59, green_t_upper=255,
+                         green_t_bottom=98, red_t_upper=255, red_t_bottom=80)
 
     # test with different mm ratios (normally get from calibrate camera)
     # mm_ratio = 0.0579  # (from notes calc)
@@ -262,6 +266,6 @@ if __name__ == "__main__":
 
     # pix_to_mm = mm_ratio
 
-    print('ratio is:' + str(pix_to_mm))
+    #print('ratio is:' + str(pix_to_mm))
 
-    mm_screw_location(pix_to_mm, tl_corner_pix, image_location='images_taken/1latest_image_from_camera.jpg')
+    #mm_screw_location(pix_to_mm, tl_corner_pix, image_location='images_taken/1latest_image_from_camera.jpg')
