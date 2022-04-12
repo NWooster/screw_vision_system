@@ -92,16 +92,16 @@ def calibrate_camera(image_location='images_taken/1latest_image_from_camera', mm
 
         # circle 4 corners (B,G,R) (top left corner should be black)
         tl_corner_rnd = np.rint(tl)  # round pixel float to nearest integer
-        cv.circle(img, (int(tl_corner_rnd[0]), int(tl_corner_rnd[1])), 50, (0, 0, 0))  # tl is BLACK
+        cv.circle(img, (int(tl_corner_rnd[0]), int(tl_corner_rnd[1])), 50, (0, 0, 0), 10)  # tl is BLACK
 
         tr_corner_rnd = np.rint(tr)  # round pixel float to nearest integer
-        cv.circle(img, (int(tr_corner_rnd[0]), int(tr_corner_rnd[1])), 50, (0, 0, 255))  # tr is RED
+        cv.circle(img, (int(tr_corner_rnd[0]), int(tr_corner_rnd[1])), 50, (0, 0, 255), 10)  # tr is RED
 
         bl_corner_rnd = np.rint(bl)  # round pixel float to nearest integer
-        cv.circle(img, (int(bl_corner_rnd[0]), int(bl_corner_rnd[1])), 50, (0, 255, 0))  # bl is GREEN
+        cv.circle(img, (int(bl_corner_rnd[0]), int(bl_corner_rnd[1])), 50, (0, 255, 0), 10)  # bl is GREEN
 
         br_corner_rnd = np.rint(br)  # round pixel float to nearest integer
-        cv.circle(img, (int(br_corner_rnd[0]), int(br_corner_rnd[1])), 50, (255, 255, 0))  # br is LIGHT BLUE
+        cv.circle(img, (int(br_corner_rnd[0]), int(br_corner_rnd[1])), 50, (255, 255, 0), 10)  # br is LIGHT BLUE
 
         # call function to get red dot pixel location
         red_dot_pix = find_red_dot(image_location=filename)
@@ -234,7 +234,7 @@ def find_red_dot(image_location='images_taken/1latest_image_from_camera.jpg'):
             # circle outline
             radius = i[2]
             # draws circles (r,b,g) colour
-            cv.circle(final_image, center, radius, (255, 0, 255), 3)
+            cv.circle(final_image, center, radius, (0, 255, 0), 10)
 
     # save image as filename.jpeg
     cv.imwrite('images_processed/1red_dot_location' + '.jpg', final_image)
