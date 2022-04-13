@@ -33,8 +33,8 @@ def click_event(event, x, y, flags, param):
 
 
 # specify what side of image to show
-#side_of_image = "left"
-side_of_image = "right"
+side_of_image = "left"
+#side_of_image = "right"
 
 # image path
 # filename = 'images_taken/1latest_image_from_camera.jpg'
@@ -44,7 +44,7 @@ side_of_image = "right"
 #filename = str('images_taken/ToTune/' + picture + '.jpg')
 
 ## testing set
-picture = 'phone_picTest10'
+picture = 'phone_picTest7'
 filename = str('images_taken/ToTest/' + picture + '.jpg')
 
 print(filename)

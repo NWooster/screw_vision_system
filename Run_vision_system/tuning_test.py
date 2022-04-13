@@ -55,8 +55,10 @@ def tune(iterations=100, no_of_pics=10):
     f_correct = no_correct
     no_correct_max = no_correct
     no_correct_min = no_correct
+    correct_std = math.inf
     f_correct_max = no_correct_max
     f_correct_min = no_correct_min
+    f_correct_std = correct_std
     f_e_loc = e_loc
 
     f_blue_upper = 255
@@ -152,7 +154,7 @@ def tune(iterations=100, no_of_pics=10):
             red_t_upper = 255
             red_t_bottom = 80
 
-        # if wanting to only change certain params alter this and iteration it occurs
+        # CHANGE THESE TO FINAL PARAMS
         if i > -1:
             dp = 1.42
             param1 = 22
@@ -212,6 +214,7 @@ def tune(iterations=100, no_of_pics=10):
             no_correct = average(no_correct_array_pics)
             no_correct_max = max(no_correct_array_pics)
             no_correct_min = min(no_correct_array_pics)
+            correct_std = np.std(no_correct_array_pics)
             e_loc = average(e_loc_array_pics)
 
         # empty arrays to store info on each pic within 1 iteration
@@ -239,6 +242,7 @@ def tune(iterations=100, no_of_pics=10):
             f_correct = no_correct
             f_correct_max = no_correct_max
             f_correct_min = no_correct_min
+            f_correct_std = correct_std
             f_e_loc = e_loc
 
         # store past errors results to plot
@@ -255,7 +259,7 @@ def tune(iterations=100, no_of_pics=10):
 
     print('There are on average', f_fp, 'screws falsely labelled,', f_fn, 'screws that were missed and',
           f_correct, 'correctly found.')
-    print('The number of correctly found screws ranges from', f_correct_min, 'to', f_correct_max, '.')
+    print('The number of correctly found screws ranges from', f_correct_min, 'to', f_correct_max, 'with a standard deviation of', f_correct_std, '.')
     print('The average location error of correctly found screws is:', f_e_loc, 'pixels.')
     print('')
     print('final error:', f_error)
@@ -355,4 +359,4 @@ def average(list):
 
 
 if __name__ == "__main__":
-    tune(iterations=1, no_of_pics=10)
+    tune(iterations=1, no_of_pics=8)
