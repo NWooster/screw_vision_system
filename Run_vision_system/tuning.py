@@ -84,21 +84,21 @@ def tune(iterations=100, no_of_pics=10):
             # blue_t_upper_low = 10  # not needed as specified by the lowest upper value
             blue_t_upper_high = 255  # default 255
             blue_t_bottom_low = 0  # default 0
-            blue_t_bottom_high = 200  # default 250
+            blue_t_bottom_high = 150  # default 250
 
             # green_t_upper_low = 10  # default 10
             green_t_upper_high = 255  # default 255
             green_t_bottom_low = 0  # default 0
-            green_t_bottom_high = 200  # default 250
+            green_t_bottom_high = 150  # default 250
 
             # red_t_upper_low = 10  # default 10
             red_t_upper_high = 255  # default 255
             red_t_bottom_low = 0  # default 0
-            red_t_bottom_high = 200  # default 250
+            red_t_bottom_high = 150  # default 250
 
         elif i >= iterations / 2:
             # refined parameter ranges
-            range_mult = 0.25  # % 0.25 change from current final parameter (range will be double this x current value)
+            range_mult = 0.1  # % 0.25 change from current final parameter (range will be double this x current value)
             dp_low = round(f_dp - f_dp * range_mult, 2)
             dp_high = round(f_dp + f_dp * range_mult, 2)
             param1_low = round(f_param1 - f_param1 * range_mult)
@@ -127,19 +127,19 @@ def tune(iterations=100, no_of_pics=10):
         param1 = random.randint(param1_low, param1_high)
         param2 = random.randint(param2_low, param2_high)
 
-        # for colour upper must be greater than bottom so t_upper_low is given by t_bottom+2
+        # for colour upper must be greater than bottom so t_upper_low is given by t_bottom+20
         blue_t_bottom = random.randint(blue_t_bottom_low, blue_t_bottom_high)
-        blue_t_upper_low = blue_t_bottom + 2
+        blue_t_upper_low = blue_t_bottom + 20
         # getting odd error sometimes
         blue_t_upper = random.randint(blue_t_upper_low, blue_t_upper_high)
 
         green_t_bottom = random.randint(green_t_bottom_low, green_t_bottom_high)
-        green_t_upper_low = green_t_bottom + 2
+        green_t_upper_low = green_t_bottom + 20
         # getting odd error sometimes
         green_t_upper = random.randint(green_t_upper_low, green_t_upper_high)
 
         red_t_bottom = random.randint(red_t_bottom_low, red_t_bottom_high)
-        red_t_upper_low = red_t_bottom + 2
+        red_t_upper_low = red_t_bottom + 20
         red_t_upper = random.randint(red_t_upper_low, red_t_upper_high)
 
         # start iteration 1 at around 70 error (better for graph)
@@ -155,7 +155,7 @@ def tune(iterations=100, no_of_pics=10):
             red_t_bottom = 80
 
         # if wanting to only change certain params alter this and iteration it occurs
-        #if i > -1:
+        #if i > 2250:
         #    dp = 1.42
         #    param1 = 22
         #    param2 = 43
@@ -359,4 +359,4 @@ def average(list):
 
 
 if __name__ == "__main__":
-    tune(iterations=3, no_of_pics=15)
+    tune(iterations=3000, no_of_pics=15)
