@@ -96,31 +96,34 @@ def tune(iterations=100, no_of_pics=10):
             red_t_bottom_low = 0  # default 0
             red_t_bottom_high = 150  # default 250
 
+        # refined parameter ranges
         elif i >= iterations / 2:
-            # refined parameter ranges
-            range_mult = 0.1  # % 0.25 change from current final parameter (range will be double this x current value)
-            dp_low = round(f_dp - f_dp * range_mult, 2)
-            dp_high = round(f_dp + f_dp * range_mult, 2)
-            param1_low = round(f_param1 - f_param1 * range_mult)
-            param1_high = round(f_param1 + f_param1 * range_mult)
-            param2_low = round(f_param2 - f_param2 * range_mult)
-            param2_high = round(f_param2 + f_param2 * range_mult)
+            range_mult = 0.2  # % 0.25 change from current fin param (range will be double this x current value)
+            if i >= iterations / 1.2:
+                range_mult = 0.05
+
+            dp_low = round(f_dp - (f_dp * range_mult), 2)
+            dp_high = round(f_dp + (f_dp * range_mult), 2)
+            param1_low = round(f_param1 - (f_param1 * range_mult))
+            param1_high = round(f_param1 + (f_param1 * range_mult))
+            param2_low = round(f_param2 - (f_param2 * range_mult))
+            param2_high = round(f_param2 + (f_param2 * range_mult))
 
             # blue_t_upper_low = round(f_blue_upper - f_blue_upper * range_mult) # mot needed as
             # specified by bottom
-            blue_t_upper_high = round(f_blue_upper + f_blue_upper * range_mult)
-            blue_t_bottom_low = round(f_blue_bottom - f_blue_bottom * range_mult)
-            blue_t_bottom_high = round(f_blue_bottom + f_blue_bottom * range_mult)
+            blue_t_upper_high = round(f_blue_upper + (f_blue_upper * range_mult))
+            blue_t_bottom_low = round(f_blue_bottom - (f_blue_bottom * range_mult))
+            blue_t_bottom_high = round(f_blue_bottom + (f_blue_bottom * range_mult))
 
             # green_t_upper_low = round(f_green_upper - f_green_upper * range_mult)
-            green_t_upper_high = round(f_green_upper + f_green_upper * range_mult)
-            green_t_bottom_low = round(f_green_bottom - f_green_bottom * range_mult)
-            green_t_bottom_high = round(f_green_bottom + f_green_bottom * range_mult)
+            green_t_upper_high = round(f_green_upper + (f_green_upper * range_mult))
+            green_t_bottom_low = round(f_green_bottom - (f_green_bottom * range_mult))
+            green_t_bottom_high = round(f_green_bottom + (f_green_bottom * range_mult))
 
             # red_t_upper_low = round(f_red_upper - f_red_upper * range_mult)
-            red_t_upper_high = round(f_red_upper + f_red_upper * range_mult)
-            red_t_bottom_low = round(f_red_bottom - f_red_bottom * range_mult)
-            red_t_bottom_high = round(f_red_bottom + f_red_bottom * range_mult)
+            red_t_upper_high = round(f_red_upper + (f_red_upper * range_mult))
+            red_t_bottom_low = round(f_red_bottom - (f_red_bottom * range_mult))
+            red_t_bottom_high = round(f_red_bottom + (f_red_bottom * range_mult))
 
         # make parameters random number in given range
         dp = round(random.uniform(dp_low, dp_high), 2)
@@ -141,6 +144,20 @@ def tune(iterations=100, no_of_pics=10):
         red_t_bottom = random.randint(red_t_bottom_low, red_t_bottom_high)
         red_t_upper_low = red_t_bottom + 20
         red_t_upper = random.randint(red_t_upper_low, red_t_upper_high)
+
+        # make sure not outside 0-255
+        if blue_t_bottom < 0:
+            blue_t_bottom = 0
+        if blue_t_upper > 255:
+            blue_t_upper = 255
+        if green_t_bottom < 0:
+            green_t_bottom = 0
+        if green_t_upper > 255:
+            green_t_upper = 255
+        if red_t_bottom < 0:
+            red_t_bottom = 0
+        if red_t_upper > 255:
+            red_t_upper = 255
 
         # start iteration 1 at around 70 error (better for graph)
         if i == 0:
@@ -289,7 +306,7 @@ def tune(iterations=100, no_of_pics=10):
         plt.ylabel('Value')
         plt.legend()
         plt.savefig('images_processed/error_graph.png')  # save graph as png
-        plt.show()
+        #plt.show()
 
     elif plot_type == 2:
         # plot iterations vs error
@@ -359,4 +376,4 @@ def average(list):
 
 
 if __name__ == "__main__":
-    tune(iterations=3000, no_of_pics=15)
+    tune(iterations=6000, no_of_pics=15)
