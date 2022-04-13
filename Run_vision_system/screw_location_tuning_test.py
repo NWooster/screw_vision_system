@@ -21,10 +21,10 @@ def pixel_screw_location(dp, param1, param2, blue_t_upper, blue_t_bottom, green_
     """
 
     # labels where image is
-    ##tuning set
-    filename = str('images_taken/ToTune/' + picture + '.jpg')
+    ## tuning set
+    #filename = str('images_taken/ToTune/' + picture + '.jpg')
     ## testing set
-    #filename = str('images_taken/ToTest/' + picture + '.jpg')
+    filename = str('images_taken/ToTest/' + picture + '.jpg')
 
     # loads an image and calls it 'initial_image'
     initial_image = cv.imread(cv.samples.findFile(filename), cv.IMREAD_COLOR)
@@ -146,10 +146,10 @@ def pixel_screw_location(dp, param1, param2, blue_t_upper, blue_t_bottom, green_
         # cv.imshow("detected screws", resized_image)
 
         # save image as filename.jpeg
-        ##tuning set
-        cv.imwrite('images_processed/' + picture + '/' + 'screw_pixel_output.jpg', final_image)
+        ## tuning set
+        #cv.imwrite('images_processed/' + picture + '/' + 'screw_pixel_output.jpg', final_image)
         ## testing set
-        #cv.imwrite('images_processed/TestSet' + picture + '/' + 'screw_pixel_output.jpg', final_image)
+        cv.imwrite('images_processed/TestSet' + picture + '/' + 'screw_pixel_output.jpg', final_image)
 
     return screw_locations
 

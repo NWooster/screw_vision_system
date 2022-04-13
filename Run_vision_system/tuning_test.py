@@ -15,7 +15,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 # custom imports
-import screw_location_tuning
+import screw_location_tuning_test
 import error
 
 
@@ -153,37 +153,37 @@ def tune(iterations=100, no_of_pics=10):
             red_t_bottom = 80
 
         # if wanting to only change certain params alter this and iteration it occurs
-        #if i > -1:
-        #    dp = 1.42
-        #    param1 = 22
-        #    param2 = 43
-        #    blue_t_upper = 255
-        #    blue_t_bottom = 59
-        #    green_t_upper = 255
-        #    green_t_bottom = 98
-        #    red_t_upper = 255
-        #    red_t_bottom = 80
+        if i > -1:
+            dp = 1.42
+            param1 = 22
+            param2 = 43
+            blue_t_upper = 255
+            blue_t_bottom = 59
+            green_t_upper = 255
+            green_t_bottom = 98
+            red_t_upper = 255
+            red_t_bottom = 80
 
         # iterate through images 1 to n (put n+1)
         number_of_pics = no_of_pics
         for n in range(1, number_of_pics + 1):
 
             ## tuning set
-            current_image = 'phone_pic' + str(n)
+            #current_image = 'phone_pic' + str(n)
             ## testing set
-            #current_image = 'phone_picTest' + str(n)
+            current_image = 'phone_picTest' + str(n)
 
             # find pixel screw location
-            pix_screw_locations = screw_location_tuning.pixel_screw_location(dp, param1, param2, blue_t_upper,
+            pix_screw_locations = screw_location_tuning_test.pixel_screw_location(dp, param1, param2, blue_t_upper,
                                                                              blue_t_bottom, green_t_upper,
                                                                              green_t_bottom, red_t_upper,
                                                                              red_t_bottom, picture=current_image,
                                                                              fast=1)
             # open ground truth .txt file
             ## tuning set
-            ground_truths = np.loadtxt('images_processed/' + current_image + '/combined_screw_ground_truths.txt', delimiter=",")
+            #ground_truths = np.loadtxt('images_processed/' + current_image + '/combined_screw_ground_truths.txt', delimiter=",")
             ## testing set
-            #ground_truths = np.loadtxt('images_processed/TestSet/' + current_image + '/combined_screw_ground_truths.txt', delimiter=",")
+            ground_truths = np.loadtxt('images_processed/TestSet/' + current_image + '/combined_screw_ground_truths.txt', delimiter=",")
 
             # check some screws exist
             if not pix_screw_locations.any():
@@ -317,23 +317,7 @@ def tune(iterations=100, no_of_pics=10):
     for n in range(1, number_of_pics + 1):
 
         ## tuning set
-        current_image = 'phone_pic' + str(n)
-        pix_screw_locations = screw_location_tuning.pixel_screw_location(f_dp, f_param1, f_param2,
-                                                                         f_blue_upper, f_blue_bottom,
-                                                                         f_green_upper, f_green_bottom,
-                                                                         f_red_upper, f_red_bottom,
-                                                                         picture=current_image, fast=0)
-
-        # open ground truth .txt file
-        ground_truths = np.loadtxt('images_processed/' + current_image + '/combined_screw_ground_truths.txt',
-                                   delimiter=",")
-
-        error.draw_error(pix_screw_locations, ground_truths,
-                         image_location=str('images_taken/ToTune/' + current_image + '.jpg'),
-                         save_image='images_processed/' + current_image + '/error.jpg')
-
-        ## testing set
-        #current_image = 'phone_picTest' + str(n)
+        #current_image = 'phone_pic' + str(n)
         #pix_screw_locations = screw_location_tuning.pixel_screw_location(f_dp, f_param1, f_param2,
         #                                                                 f_blue_upper, f_blue_bottom,
         #                                                                 f_green_upper, f_green_bottom,
@@ -341,12 +325,28 @@ def tune(iterations=100, no_of_pics=10):
         #                                                                 picture=current_image, fast=0)
 
         # open ground truth .txt file
-        #ground_truths = np.loadtxt('images_processed/TestSet/' + current_image + '/combined_screw_ground_truths.txt',
+        #ground_truths = np.loadtxt('images_processed/' + current_image + '/combined_screw_ground_truths.txt',
         #                           delimiter=",")
 
         #error.draw_error(pix_screw_locations, ground_truths,
-        #                 image_location=str('images_taken/ToTest/' + current_image + '.jpg'),
-        #                 save_image='images_processed/TestSet/' + current_image + '/error.jpg')
+        #                 image_location=str('images_taken/ToTune/' + current_image + '.jpg'),
+        #                 save_image='images_processed/' + current_image + '/error.jpg')
+
+        ## testing set
+        current_image = 'phone_picTest' + str(n)
+        pix_screw_locations = screw_location_tuning_test.pixel_screw_location(f_dp, f_param1, f_param2,
+                                                                         f_blue_upper, f_blue_bottom,
+                                                                         f_green_upper, f_green_bottom,
+                                                                         f_red_upper, f_red_bottom,
+                                                                         picture=current_image, fast=0)
+
+        # open ground truth .txt file
+        ground_truths = np.loadtxt('images_processed/TestSet/' + current_image + '/combined_screw_ground_truths.txt',
+                                   delimiter=",")
+
+        error.draw_error(pix_screw_locations, ground_truths,
+                         image_location=str('images_taken/ToTest/' + current_image + '.jpg'),
+                         save_image='images_processed/TestSet/' + current_image + '/error.jpg')
 
 
 
@@ -355,4 +355,4 @@ def average(list):
 
 
 if __name__ == "__main__":
-    tune(iterations=5, no_of_pics=15)
+    tune(iterations=1, no_of_pics=10)
