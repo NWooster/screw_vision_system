@@ -71,7 +71,8 @@ def tune(iterations=100, no_of_pics=10):
     for i in range(iterations):
 
         # refine parameter ranges based off iteration number
-        if i < iterations / 2:
+        #if i < iterations / 2:
+        if i < 0:
             # parameter ranges
             dp_low = 1  # default 0.01
             dp_high = 2  # default 2.5
@@ -97,9 +98,10 @@ def tune(iterations=100, no_of_pics=10):
             red_t_bottom_high = 150  # default 250
 
         # refined parameter ranges
-        elif i >= iterations / 2:
+        #elif i >= iterations / 2:
+        elif i >= 0:
             range_mult = 0.2  # % 0.25 change from current fin param (range will be double this x current value)
-            if i >= iterations / 1.2:
+            if i >= 0:
                 range_mult = 0.05
 
             dp_low = round(f_dp - (f_dp * range_mult), 2)
@@ -170,6 +172,18 @@ def tune(iterations=100, no_of_pics=10):
             green_t_bottom = 98
             red_t_upper = 255
             red_t_bottom = 80
+
+        # for now to continue last best
+        if i == 0:
+            dp = 1.8
+            param1 = 27  # put to 22 for best, 50 for 70-80 error
+            param2 = 61  # put to 43 for best, 31 for 70-80 error
+            blue_t_upper = 251
+            blue_t_bottom = 103
+            green_t_upper = 127
+            green_t_bottom = 105
+            red_t_upper = 129
+            red_t_bottom = 54
 
         # if wanting to only change certain params alter this and iteration it occurs
         #if i > 2250:
@@ -376,4 +390,4 @@ def average(list):
 
 
 if __name__ == "__main__":
-    tune(iterations=6000, no_of_pics=15)
+    tune(iterations=5000, no_of_pics=15)
