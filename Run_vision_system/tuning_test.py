@@ -156,15 +156,15 @@ def tune(iterations=100, no_of_pics=10):
 
         # CHANGE THESE TO FINAL PARAMS
         if i > -1:
-            dp = 1.42
-            param1 = 22
-            param2 = 43
-            blue_t_upper = 255
-            blue_t_bottom = 59
-            green_t_upper = 255
-            green_t_bottom = 98
-            red_t_upper = 255
-            red_t_bottom = 80
+            dp = 1.8
+            param1 = 27
+            param2 = 61
+            blue_t_upper = 251
+            blue_t_bottom = 103
+            green_t_upper = 127
+            green_t_bottom = 105
+            red_t_upper = 129
+            red_t_bottom = 54
 
         # iterate through images 1 to n (put n+1)
         number_of_pics = no_of_pics
