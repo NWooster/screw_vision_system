@@ -142,18 +142,6 @@ def tune(iterations=100, no_of_pics=10):
         red_t_upper_low = red_t_bottom + 2
         red_t_upper = random.randint(red_t_upper_low, red_t_upper_high)
 
-        # start iteration 1 at around 70 error (better for graph)
-        if i == 0:
-            dp = 1.42
-            param1 = 50  # put to 22 for best, 50 for 70-80 error
-            param2 = 31  # put to 43 for best, 31 for 70-80 error
-            blue_t_upper = 255
-            blue_t_bottom = 59
-            green_t_upper = 255
-            green_t_bottom = 98
-            red_t_upper = 255
-            red_t_bottom = 80
-
         # CHANGE THESE TO FINAL PARAMS
         if i > -1:
             dp = 1.8
