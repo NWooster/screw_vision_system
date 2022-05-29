@@ -27,13 +27,17 @@ These common python libraries need to be installed. They are imported at the beg
 
 
 ### Installing
-**The main script to be downloaded is:**
+**The main scripts to be downloaded are located in:**
 
-screw_vision_system.py
+Run_vision_system
+
+**The main script to be run is:**
+
+main_vision.py
 
 **The modules that also must be downloaded that it calls are:**
 
-XXX.py
+screw_location.py
 
 
 
