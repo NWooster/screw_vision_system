@@ -19,8 +19,6 @@ These common python libraries need to be installed. They are imported at the beg
 
 - pandas
 
-- random
-
 - math
 
 - matplotlib
