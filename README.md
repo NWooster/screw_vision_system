@@ -37,12 +37,14 @@ main_vision.py
 
 **The modules that also must be downloaded that it calls are:**
 
+take_picture.py
+calibrate_camera.py
 screw_location.py
 
 
 
 
 ### Executing Program
-To execute the script...
-Examples include...
+To execute the script assign a camera in 'main_vision.py' and execute the script.
+Other modules are included in the folder for tuning Hough Circle parameters using an error function.
 
